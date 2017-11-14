@@ -1,0 +1,23 @@
+<div class="card-group row" *ngIf="!selectedCategory">
+    <div class="card col-sm-3" *ngFor="let category of categories">
+        <a class="card-block" href="javascript:void(0)" (click)="select(category)">
+            <img src="https://placeholdit.co//i/80x80?&bg=eeeeee" class="icon">
+            <h4>{{category.text}}</h4>
+        </a>
+    </div>
+</div>
+<div class="categories-navigation">
+    <div class="row">
+        <div class="col-sm-3 category-tree">
+            <category-tree-view
+                    [categories]="categories"
+                    [selectedCategory]="selectedCategory"
+                    (onSelected)="onSelected($event)"
+                    *ngIf="selectedCategory">
+            </category-tree-view>
+        </div>
+        <div class="col-sm-9 category-articles" *ngIf="selectedCategory">
+            <category-articles [selectedCategory]="selectedCategory"></category-articles>
+        </div>
+    </div>
+</div>

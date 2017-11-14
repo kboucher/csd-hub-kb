@@ -1,0 +1,13 @@
+{
+  "generator-jetray": {
+    "portletName": "bcbsal.csd.knowledgeBase",
+    "portletTitle": "BCBSAL CSD Knowledge Base",
+    "portletCategory": "BCBSAL",
+    "framework": "Angular",
+    "buildsys": "npm",
+    "portletInstanceable": "false",
+    "appFile": "index.html",
+    "portletPath": "bcbsal.csd.knowledgeBase",
+    "portletNameCleaned": "bcbsal_csd_knowledgeBase"
+  }
+}
