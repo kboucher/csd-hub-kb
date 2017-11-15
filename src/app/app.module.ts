@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from "./app.component";
 import { ArticleListComponent } from "./article/components/article-list.component";
-import { CategoryArticlesComponent } from "./category/components/category-articles.component";
 import { CategoryListComponent } from "./category/components/category-list.component";
 import { TreeViewComponent } from "./category/components/tree-view.component";
 
@@ -26,7 +25,6 @@ let categoriesState = { name: 'categories', url: '/categories',  component: Cate
     declarations: [
         AppComponent,
         ArticleListComponent,
-        CategoryArticlesComponent,
         CategoryListComponent,
         TreeViewComponent,
     ],
