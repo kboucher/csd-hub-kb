@@ -1,30 +1,25 @@
 import { Injectable } from '@angular/core';
-import { Category } from '../models/category';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
-function stateFactory() {
-    return {
-        disabled: false,
-        opened: false,
-        selected: false
-    };
-}
+// Import RxJs required methods
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+
+import { Category } from '../models/category';
 
 @Injectable()
 export class CategoryService {
-    private categories: Array<Category> = [
-        new Category('Accounting', 'node_1', 'MONEY_ICON', stateFactory(), [
-            new Category('Record Keeping', 'node_5', 'RECORDS_ICON', stateFactory(), []),
-            new Category('IRS Records', 'node_6', 'IRS_ICON', stateFactory(), []),
-        ]),
-        new Category('Benefits', 'node_2', 'MAZE_ICON', stateFactory(), [
-            new Category('Prescriptions', 'node_7', 'DRUGS_ICON', stateFactory(), []),
-            new Category('Copay', 'node_8', 'COPAY_ICON', stateFactory(), []),
-        ]),
-        new Category('Bluecare', 'node_3', 'CHATBOX_ICON', stateFactory(), []),
-        new Category('Breaking News', 'node_4', 'NEWS_ICON', stateFactory(), []),
-    ];
+    /**
+     * TODO: Make the relevant URL fragments dynamic (host, port, group ID, version?)
+     */
+    private categoriesUrl = 'http://localhost:8080/o/kb-rest-api/category/34543/tree/v1';
 
-    getCategories(): Array<Category> {
-        return this.categories;
+    constructor(private http: Http) {}
+
+    public getCategories(): Promise<Response> {
+        return this.http.get(this.categoriesUrl)
+            .map(function (res) {
+                return res.json();
+            }).toPromise();
     }
 }

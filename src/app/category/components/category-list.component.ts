@@ -1,9 +1,20 @@
 declare var $:any;
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Category } from '../models/category';
 import { OnInit } from '@angular/core';
 import { CategoryService } from '../services/category-service';
+
+/**
+ *  Creates state objects for jstree
+ */
+function stateFactory() {
+    return {
+        disabled: false,
+        opened: false,
+        selected: false
+    };
+}
 
 @Component({
     providers: [CategoryService],
@@ -11,15 +22,19 @@ import { CategoryService } from '../services/category-service';
     templateUrl: './category-list.html'
 })
 export class CategoryListComponent implements OnInit {
-    selectedCategory: Category;
-    categories: Array<Category>;
+    @Input() categories: Category[];
 
-    constructor(private _categoryService: CategoryService) {
-        this.categories = _categoryService.getCategories();
-    }
+    selectedCategory: Category;
+
+    constructor(
+        private _categoryService: CategoryService
+    ) {}
 
     ngOnInit() {
-        console.log(`Categories list component initialized with ${this.categories.length} categories.`);
+        // Add state objects for jstree plugin
+        this.categories.forEach((_category) => {
+            _category.state = stateFactory();
+        });
     }
 
     onSelected($event) {

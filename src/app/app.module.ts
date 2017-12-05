@@ -5,22 +5,35 @@ import { AppComponent } from "./app.component";
 import { ArticleListComponent } from "./article/components/article-list.component";
 import { CategoryListComponent } from "./category/components/category-list.component";
 import { TreeViewComponent } from "./category/components/tree-view.component";
+import { CategoryService } from './category/services/category-service';
 
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { UIRouterModule } from "@uirouter/angular";
 import { uiRouterConfigFn } from "./app.routerconfig";
 
-let categoriesState = { name: 'categories', url: '/categories',  component: CategoryListComponent };
+let categoriesState = {
+    name: 'categories',
+    url: '/categories',
+    component: CategoryListComponent,
+    resolve: [
+        {
+            token: 'categories',
+            deps: [CategoryService],
+            resolveFn: (categoryService) => categoryService.getCategories()
+        }
+    ]
+};
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
         HttpModule,
-        UIRouterModule.forRoot({ states: [ categoriesState ],
-                                 config: uiRouterConfigFn,
-                                 useHash: true })
+        UIRouterModule.forRoot({
+            states: [ categoriesState ],
+            config: uiRouterConfigFn,
+            useHash: true })
     ],
     declarations: [
         AppComponent,
@@ -28,7 +41,7 @@ let categoriesState = { name: 'categories', url: '/categories',  component: Cate
         CategoryListComponent,
         TreeViewComponent,
     ],
-    providers: [],
+    providers: [CategoryService],
     bootstrap: [AppComponent]
 })
 export class AppModule {}
