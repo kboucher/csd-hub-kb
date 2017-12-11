@@ -6,6 +6,7 @@ import { ArticleListComponent } from "./article/components/article-list.componen
 import { CategoryListComponent } from "./category/components/category-list.component";
 import { TreeViewComponent } from "./category/components/tree-view.component";
 import { CategoryService } from './category/services/category-service';
+import { ArticleService } from './article/services/article-service';
 
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";

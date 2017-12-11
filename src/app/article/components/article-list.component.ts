@@ -18,20 +18,24 @@ export class ArticleListComponent implements OnInit {
     articlesColumn2: Array<Article>;
     selectedArticle: Article;
 
-    constructor(private _articleService: ArticleService) {
-        this.articles = _articleService.getArticlesByCategory(this.selectedCategory);
-
-        if (this.articles.length === 1) {
-            this.articlesColumn1 = this.articles;
-        } else if (this.articles.length > 1) {
-            let halfway = Math.round(this.articles.length / 2);
-            this.articlesColumn1 = this.articles.slice(0, halfway);
-            this.articlesColumn2 = this.articles.slice(halfway, this.articles.length);
-        }
-    }
+    constructor(private _articleService: ArticleService) {}
 
     ngOnInit() {
         console.log('Categories Articles component initialized with ' + this.selectedCategory);
+
+        this._articleService.getArticlesByCategory(this.selectedCategory).then((response) => {
+            debugger;
+
+            // this.articles = response;
+
+            // if (this.articles.length === 1) {
+            //     this.articlesColumn1 = this.articles;
+            // } else if (this.articles.length > 1) {
+            //     let halfway = Math.round(this.articles.length / 2);
+            //     this.articlesColumn1 = this.articles.slice(0, halfway);
+            //     this.articlesColumn2 = this.articles.slice(halfway, this.articles.length);
+            // }
+        });
     }
 
     goBackToList() {

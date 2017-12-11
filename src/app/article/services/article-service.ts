@@ -1,4 +1,12 @@
+declare var LIFERAY_VARS: any; // declare global LIFERAY_VARS
+
 import { Injectable } from '@angular/core';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+
+// Import RxJs required methods
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+
 import { Article } from '../models/article';
 import { Category } from '../../category/models/category';
 
@@ -41,8 +49,23 @@ export class ArticleService {
             )
     ];
 
-    getArticlesByCategory(category: Category): Array<Article> {
-        return this.articles;
+    constructor(private http: Http) {}
+
+    // getArticlesByCategory(category: Category): Array<Article> {
+    //     return this.articles;
+    // }
+
+    public getArticlesByCategory(category: Category): Promise<Response> {
+        // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/v1
+
+        let articleListUrl = `${LIFERAY_VARS.portalUrl}/o/kb-rest-api/article/${LIFERAY_VARS.groupId}/category/${category.id}/v1`;
+
+        debugger;
+
+        return this.http.get(articleListUrl)
+            .map(function (res) {
+                return res.json();
+            }).toPromise();
     }
 
     getArticleById(articleId: number) {
