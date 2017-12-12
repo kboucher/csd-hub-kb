@@ -3,6 +3,7 @@ declare var $:any;
 import { Component, Input } from '@angular/core';
 import { Category } from '../models/category';
 import { OnInit } from '@angular/core';
+
 import { CategoryService } from '../services/category-service';
 
 /**
@@ -26,9 +27,7 @@ export class CategoryListComponent implements OnInit {
 
     selectedCategory: Category;
 
-    constructor(
-        private _categoryService: CategoryService
-    ) {}
+    constructor() {}
 
     ngOnInit() {
         // Add state objects for jstree plugin
@@ -37,13 +36,8 @@ export class CategoryListComponent implements OnInit {
         });
     }
 
-    onSelected($event) {
-        this.selectedCategory = $event.category;
-    }
-
     select(category: Category) {
         category.state.opened = true;
         category.state.selected = true;
-        this.selectedCategory = category;
     }
 }

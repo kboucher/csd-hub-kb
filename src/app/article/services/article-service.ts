@@ -51,16 +51,11 @@ export class ArticleService {
 
     constructor(private http: Http) {}
 
-    // getArticlesByCategory(category: Category): Array<Article> {
-    //     return this.articles;
-    // }
-
     public getArticlesByCategory(category: Category): Promise<Response> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/v1
 
-        let articleListUrl = `${LIFERAY_VARS.portalUrl}/o/kb-rest-api/article/${LIFERAY_VARS.groupId}/category/${category.id}/v1`;
-
-        debugger;
+        let articleListUrl =
+                `${LIFERAY_VARS.portalUrl}/o/kb-rest-api/article/${LIFERAY_VARS.groupId}/category/${category}/v1`;
 
         return this.http.get(articleListUrl)
             .map(function (res) {

@@ -1,31 +1,50 @@
-<div class="articles-list-container" *ngIf="articles.length && !selectedArticle">
-    <div class="row" *ngIf="articlesColumn1.length">
-        <h3 class="col-sm-12">{{selectedCategory.text}} Articles</h3>
-        <ol class="col-sm-6 articles-list">
-            <li *ngFor="let article of articlesColumn1">
-                <a href="#" (click)="viewArticle(article.id)">{{article.title}}</a>
-            </li>
-        </ol>
-        <ol start="{{articlesColumn1.length + 1}}" class="col-sm-6 articles-list" *ngIf="articlesColumn2.length">
-            <li *ngFor="let article of articlesColumn2">
-                <a href="#" (click)="viewArticle(article.id)">{{article.title}}</a>
-            </li>
-        </ol>
+<div class="categories-navigation">
+    <div class="row">
+        <div class="col-sm-3 category-tree">
+            <category-tree-view
+                    [categories]="categories"
+                    [selectedCategory]="selectedCategory"
+                    (onSelected)="onSelected($event)">
+            </category-tree-view>
+        </div>
+        <div class="col-sm-9 category-articles">
+            <div class="articles-list-container" *ngIf="articles && articles.length && !selectedArticle">
+                <div class="row" *ngIf="articlesColumn1.length">
+                    <h3 class="col-sm-12">{{selectedCategory.text}} Articles</h3>
+                    <ol class="col-sm-6 articles-list">
+                        <li *ngFor="let article of articlesColumn1">
+                            <a href="#" (click)="viewArticle(article.id)">{{article.title}}</a>
+                        </li>
+                    </ol>
+                    <ol
+                            start="{{articlesColumn1.length + 1}}"
+                            class="col-sm-6 articles-list"
+                            *ngIf="articlesColumn2.length">
+                                <li *ngFor="let article of articlesColumn2">
+                                    <a href="#" (click)="viewArticle(article.id)">{{article.title}}</a>
+                                </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="no-articles-message" *ngIf="articles && !articles.length && !selectedArticle">
+                <div class="row">
+                    <h3 class="col-sm-12">{{selectedCategory.text}} Articles</h3>
+                    <h4 style="text-align: center; margin-top: 8rem;">NO ARTICLES IN THIS CATEGORY</h4>
+                </div>
+            </div>
+
+            <div class="article-container" *ngIf="selectedArticle">
+                <h2>
+                    <a href="#" (click)="goBackToList()" class="btn btn-default back-btn">
+                        <i class="icon icon-chevron-left"></i>
+                        Back to list
+                    </a>
+                    <span [innerHTML]="preventOrphans(selectedArticle.title)"></span>
+                </h2>
+                <div [innerHTML]="selectedArticle.body"></div>
+                <p><strong>Published/Updated:</strong> {{selectedArticle.date}}</p>
+            </div>
+        </div>
     </div>
-</div>
-
-<div class="no-articles-message" *ngIf="!articles.length && !selectedArticle">
-    <h1>NO ARTICLES IN THIS CATEGORY</h1>
-</div>
-
-<div class="article-container" *ngIf="selectedArticle">
-    <h2>
-        <a href="#" (click)="goBackToList()" class="btn btn-default back-btn">
-            <i class="icon icon-chevron-left"></i>
-            Back to list
-        </a>
-        <span [innerHTML]="preventOrphans(selectedArticle.title)"></span>
-    </h2>
-    <div [innerHTML]="selectedArticle.body"></div>
-    <p><strong>Published/Updated:</strong> {{selectedArticle.date}}</p>
 </div>

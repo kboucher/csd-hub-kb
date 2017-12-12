@@ -63,6 +63,8 @@ export class TreeViewComponent implements OnInit {
     }
 
     select(category: Category) {
+        this.selectedCategory.state.selected = false;
+        category.state.selected = true;
         this.onSelected.emit({event, category});
     }
 }
