@@ -68,7 +68,9 @@ export class ArticleListComponent implements OnInit {
     }
 
     viewArticle(articleId: number) {
-        this.selectedArticle = this._articleService.getArticleById(articleId);
+        this._articleService.getArticleById(articleId).then((article) => {
+            debugger;
+        });
 
         event.preventDefault();
     }

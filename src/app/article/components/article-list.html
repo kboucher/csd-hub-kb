@@ -16,13 +16,12 @@
                             <a href="#" (click)="viewArticle(article.id)">{{article.title}}</a>
                         </li>
                     </ol>
-                    <ol
-                            start="{{articlesColumn1.length + 1}}"
-                            class="col-sm-6 articles-list"
-                            *ngIf="articlesColumn2.length">
-                                <li *ngFor="let article of articlesColumn2">
-                                    <a href="#" (click)="viewArticle(article.id)">{{article.title}}</a>
-                                </li>
+                    <ol start="{{articlesColumn1.length + 1}}"
+                        class="col-sm-6 articles-list"
+                        *ngIf="articlesColumn2.length">
+                            <li *ngFor="let article of articlesColumn2">
+                                <a href="#" (click)="viewArticle(article.id)">{{article.title}}</a>
+                            </li>
                     </ol>
                 </div>
             </div>
