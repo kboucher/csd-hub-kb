@@ -1,4 +1,4 @@
-declare var LIFERAY_VARS: any; // declare global LIFERAY_VARS
+declare var Liferay: any;
 
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
@@ -9,11 +9,18 @@ import 'rxjs/add/operator/toPromise';
 
 import { Category } from '../models/category';
 
+const apiVersion = 'v1';
+
 @Injectable()
 export class CategoryService {
-    private categoriesUrl = `${LIFERAY_VARS.portalUrl}/o/kb-rest-api/category/${LIFERAY_VARS.groupId}/tree/v1`;
+    private categoriesUrl: string;
 
-    constructor(private http: Http) {}
+    constructor(private http: Http) {
+        let portalUrl = Liferay.ThemeDisplay.getPortalURL();
+        let groupId = Liferay.ThemeDisplay.getScopeGroupId();
+
+        this.categoriesUrl = `${portalUrl}/o/kb-rest-api/category/${groupId}/tree/${apiVersion}`;
+    }
 
     public getCategories(): Promise<Response> {
         return this.http.get(this.categoriesUrl)

@@ -1,3 +1,5 @@
+declare var Liferay: any;
+
 import { UIRouter, StateDeclaration } from "@uirouter/angular";
 import { Injector, Injectable } from "@angular/core";
 
@@ -14,9 +16,12 @@ export function uiRouterConfigFn(router: UIRouter, injector: Injector) {
     // want it to stay where it is in terms of state upon receipt of an unknown url.
     router.urlService.rules.otherwise(function(_router, _url) {
         let currentState = router.stateService.current.name;
+        let defaultState = Liferay.ThemeDisplay.isSignedIn() ? 'categories' : 'anonymous-user';
+
         if (!currentState) {
-            router.stateService.go('categories', null, { location: false });
+            router.stateService.go(defaultState, null, { location: false });
         }
+
         return;
     });
 

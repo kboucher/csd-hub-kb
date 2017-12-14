@@ -1,7 +1,7 @@
 declare var $: any; // declare global jquery
 
 import { Component, Input, OnInit } from '@angular/core';
-import { UIRouter } from "@uirouter/angular";
+import { UIRouter } from '@uirouter/angular';
 
 import { Category } from '../../category/models/category';
 import { Article } from '../models/article';
@@ -23,25 +23,29 @@ export class ArticleListComponent implements OnInit {
 
     constructor(
         private _articleService: ArticleService,
-        private uiRouter: UIRouter
+        private _uiRouter: UIRouter
     ) {}
 
     ngOnInit() {
         // Back to card view if no selected category (handles state issue with reload)
         if (!this.selectedCategory) {
-            this.uiRouter.stateService.go('categories', null, { location: false });
+            this._uiRouter.stateService.go('categories', null, { location: false });
         } else {
+            // remove these two lines and uncomment below to enable two column list
+            this.articlesColumn1 = this.articles;
+            this.articlesColumn2 = [];
+
             // cut list into two columns
-            if (this.articles) {
-                if (this.articles.length === 1) {
-                    this.articlesColumn1 = this.articles;
-                    this.articlesColumn2 = [];
-                } else if (this.articles.length > 1) {
-                    let halfway = Math.round(this.articles.length / 2);
-                    this.articlesColumn1 = this.articles.slice(0, halfway);
-                    this.articlesColumn2 = this.articles.slice(halfway, this.articles.length);
-                }
-            }
+            // if (this.articles) {
+            //     if (this.articles.length === 1) {
+            //         this.articlesColumn1 = this.articles;
+            //         this.articlesColumn2 = [];
+            //     } else if (this.articles.length > 1) {
+            //         let halfway = Math.round(this.articles.length / 2);
+            //         this.articlesColumn1 = this.articles.slice(0, halfway);
+            //         this.articlesColumn2 = this.articles.slice(halfway, this.articles.length);
+            //     }
+            // }
         }
     }
 
@@ -52,24 +56,15 @@ export class ArticleListComponent implements OnInit {
     }
 
     onSelected($event) {
-        this.uiRouter.stateService.go('categories.articles', {
+        this._uiRouter.stateService.go('categories.articles', {
             id: $event.category.id,
             selectedCategory: $event.category
         }, { location: false });
     }
 
-    preventOrphans(string) {
-        var stringArr = string.trim().split(' ');
-
-        stringArr.splice(stringArr.length - 2, 0, '<span class="text-nowrap">');
-        stringArr.push('</span>');
-
-        return stringArr.join(' ');
-    }
-
     viewArticle(articleId: number) {
         this._articleService.getArticleById(articleId).then((article) => {
-            debugger;
+            this.selectedArticle = article;
         });
 
         event.preventDefault();

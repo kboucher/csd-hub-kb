@@ -4,7 +4,8 @@
             (click)="select(category)"
             uiSref=".articles"
             [uiParams]="{ id: category.id, selectedCategory: category }"
-            [uiOptions]="{ location: false }">
+            [uiOptions]="{ location: false }"
+            title="{{category.text}}">
                 <img src="{{category.image}}" class="icon">
                 <h4>{{category.text}}</h4>
         </a>
