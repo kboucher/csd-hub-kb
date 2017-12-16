@@ -1,0 +1,14 @@
+<div class="article-container" *ngIf="article">
+        <a class="btn btn-default back-btn"
+            uiSref="categories.articles"
+            [uiParams]="{ categoryId: category.id }"
+            [uiOptions]="{ location: true }">
+                <i class="icon icon-chevron-left"></i>
+                Back to {{category.text}} Articles
+        </a>
+    <h2>
+        <span [innerHTML]="article.title | preventOrphans"></span>
+    </h2>
+    <div [innerHTML]="article.body | safe:html"></div>
+    <p><strong>Published/Updated:</strong> {{article.date | date:"MMM d, y"}}</p>
+</div>

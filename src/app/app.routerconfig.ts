@@ -16,10 +16,19 @@ export function uiRouterConfigFn(router: UIRouter, injector: Injector) {
     // want it to stay where it is in terms of state upon receipt of an unknown url.
     router.urlService.rules.otherwise(function(_router, _url) {
         let currentState = router.stateService.current.name;
-        let defaultState = Liferay.ThemeDisplay.isSignedIn() ? 'categories' : 'anonymous-user';
+        let fragment = window.location.hash;
+        let defaultState;
+
+        if (!Liferay.ThemeDisplay.isSignedIn()) {
+            defaultState = 'anonymous-user';
+        } else if (fragment) {
+            defaultState = fragment.replace('#', '');
+        } else {
+            defaultState = 'categories';
+        }
 
         if (!currentState) {
-            router.stateService.go(defaultState, null, { location: false });
+            router.stateService.go(defaultState, null, { location: true });
         }
 
         return;

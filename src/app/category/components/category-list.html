@@ -2,12 +2,27 @@
     <div class="card col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let category of categories">
         <a class="card-block"
             (click)="select(category)"
-            uiSref=".articles"
-            [uiParams]="{ id: category.id, selectedCategory: category }"
-            [uiOptions]="{ location: false }"
+            uiSref="categories.articles"
+            [uiParams]="{ categoryId: category.id }"
+            [uiOptions]="{ location: true }"
             title="{{category.text}}">
                 <img src="{{category.image}}" class="icon">
                 <h4>{{category.text}}</h4>
         </a>
+    </div>
+</div>
+
+<div class="categories-navigation" *ngIf="selectedCategory">
+    <div class="row">
+        <div class="col-sm-3 category-tree">
+            <category-tree-view
+                [categories]="categories"
+                [selectedCategory]="selectedCategory"
+                (onSelected)="onSelected($event)">
+            </category-tree-view>
+        </div>
+        <div class="col-sm-9 category-articles">
+            <ui-view name="articles"></ui-view>
+        </div>
     </div>
 </div>

@@ -1,0 +1,33 @@
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li [class.disabled]="!prevPage">
+            <a href="#"
+                aria-label="Previous"
+                (click)="changePage(prevPage)"
+                *ngIf="prevPage">
+                    <span aria-hidden="true">&laquo;</span>
+            </a>
+            <span aria-hidden="true" *ngIf="!prevPage">&laquo;</span>
+        </li>
+        <li [class.active]="currentPage === pageNum"
+            [class.disabled]="pageNum === -1"
+            *ngFor="let pageNum of displayPages">
+                <a href="#"
+                    (click)=changePage(pageNum)
+                    *ngIf="currentPage !== pageNum && pageNum > 0">
+                        {{pageNum}}
+                </a>
+                <span *ngIf="currentPage === pageNum">{{pageNum}}</span>
+                <span *ngIf="pageNum === -1">&hellip;</span>
+        </li>
+        <li [class.disabled]="!nextPage">
+            <a href="#"
+                aria-label="Next"
+                (click)="changePage(nextPage)"
+                *ngIf="nextPage">
+                    <span aria-hidden="true">&raquo;</span>
+            </a>
+            <span aria-hidden="true" *ngIf="!nextPage">&raquo;</span>
+        </li>
+    </ul>
+</nav>

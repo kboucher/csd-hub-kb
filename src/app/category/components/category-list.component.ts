@@ -1,9 +1,9 @@
 declare var $:any;
 
-import { Component, Input } from '@angular/core';
-import { Category } from '../models/category';
-import { OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { UIRouter } from '@uirouter/angular';
 
+import { Category } from '../models/category';
 import { CategoryService } from '../services/category-service';
 
 @Component({
@@ -16,7 +16,9 @@ export class CategoryListComponent implements OnInit {
 
     selectedCategory: Category;
 
-    constructor() {}
+    constructor(
+        private _uiRouter: UIRouter
+    ) {}
 
     /**
         Recurses over categories and children to add
@@ -48,7 +50,20 @@ export class CategoryListComponent implements OnInit {
         }
     }
 
+    // Handles category tree-view click
+    onSelected($event) {
+        this.selectedCategory = $event.category;
+
+        this._uiRouter.stateService.go('categories.articles', {
+            categoryId: $event.category.id,
+            selectedCategory: $event.category
+        }, { location:true });
+    }
+
+    // Handles category card click
     select(category: Category) {
+        this.selectedCategory = category;
+
         category.state.opened = true;
         category.state.selected = true;
     }

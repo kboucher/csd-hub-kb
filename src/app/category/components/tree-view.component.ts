@@ -1,27 +1,10 @@
 declare var $: any; // declare global jquery
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Category } from '../models/category';
-import { OnInit } from '@angular/core';
+import { CategoryService } from '../services/category-service';
 
 const treeSelector = '#category-tree';
-
-/**
-    Recursively searches multidimensional array of objects
-    to find one with a particular ID value.
- */
-function findById(collection, id) {
-    if (collection.length) {
-        for (var i = 0; i < collection.length; i++) {
-            if (collection[i].id == id) {
-                return collection[i];
-            }
-
-            let found = findById(collection[i].children, id);
-            if (found) return found;
-        }
-    }
-};
 
 @Component({
     selector: 'category-tree-view',
@@ -32,7 +15,7 @@ export class TreeViewComponent implements OnInit {
     @Input() selectedCategory: Category;
     @Output() onSelected = new EventEmitter();
 
-    constructor() {}
+    constructor(private categoryService: CategoryService) {}
 
     ngOnInit() {
         /*
@@ -43,7 +26,7 @@ export class TreeViewComponent implements OnInit {
         $.jstree.defaults.search.show_only_matches = true;
 
         $(treeSelector).on('select_node.jstree', function(e, data) {
-            let category = findById(this.categories, data.node.id);
+            let category = this.categoryService.findById(this.categories, data.node.id);
 
             this.select(category);
         }.bind(this)).jstree({

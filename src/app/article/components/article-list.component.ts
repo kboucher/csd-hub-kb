@@ -13,13 +13,16 @@ import { ArticleService } from '../services/article-service';
     templateUrl: './article-list.html'
 })
 export class ArticleListComponent implements OnInit {
-    @Input() articles: Article[];
-    @Input() categories: Category[];
+    @Input() articlesResponse: any;
     @Input() selectedCategory: Category;
 
-    articlesColumn1: Array<Article>;
-    articlesColumn2: Array<Article>;
+    articles: Article[];
+    page: number;
+    pages: number[] = [];
+    pageSize: number;
     selectedArticle: Article;
+    showPager: boolean;
+    total: number;
 
     constructor(
         private _articleService: ArticleService,
@@ -29,44 +32,28 @@ export class ArticleListComponent implements OnInit {
     ngOnInit() {
         // Back to card view if no selected category (handles state issue with reload)
         if (!this.selectedCategory) {
-            this._uiRouter.stateService.go('categories', null, { location: false });
+            this._uiRouter.stateService.go('categories', null, { location: true });
         } else {
-            // remove these two lines and uncomment below to enable two column list
-            this.articlesColumn1 = this.articles;
-            this.articlesColumn2 = [];
+            this.articles = this.articlesResponse.articles;
+            this.page = this.articlesResponse.page;
+            this.pageSize = this.articlesResponse.size;
+            this.total = this.articlesResponse.total;
+            this.showPager = this.total > this.pageSize;
 
-            // cut list into two columns
-            // if (this.articles) {
-            //     if (this.articles.length === 1) {
-            //         this.articlesColumn1 = this.articles;
-            //         this.articlesColumn2 = [];
-            //     } else if (this.articles.length > 1) {
-            //         let halfway = Math.round(this.articles.length / 2);
-            //         this.articlesColumn1 = this.articles.slice(0, halfway);
-            //         this.articlesColumn2 = this.articles.slice(halfway, this.articles.length);
-            //     }
-            // }
+            for (let i = 0; i < Math.ceil(this.total / this.pageSize); i++) {
+                this.pages.push(i + 1);
+            }
         }
     }
 
-    goBackToList() {
-        this.selectedArticle = null;
-
-        event.preventDefault();
-    }
-
-    onSelected($event) {
-        this._uiRouter.stateService.go('categories.articles', {
-            id: $event.category.id,
-            selectedCategory: $event.category
-        }, { location: false });
-    }
-
-    viewArticle(articleId: number) {
-        this._articleService.getArticleById(articleId).then((article) => {
-            this.selectedArticle = article;
+    goToPage(pageNum: number) {
+        this._articleService.getArticlesByCategory(this.selectedCategory.id, {
+            page: pageNum,
+            size: this.pageSize
+        }).then((response: any) => {
+            this.articles = response.articles;
+            this.page = response.page;
+            this.pageSize = response.size;
         });
-
-        event.preventDefault();
     }
 }

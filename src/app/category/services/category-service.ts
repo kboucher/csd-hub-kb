@@ -28,4 +28,20 @@ export class CategoryService {
                 return res.json();
             }).toPromise();
     }
+
+    /**
+        Recursively searches categories to find one with a particular ID value.
+    */
+    public findById(collection: Category[], id: string): Category {
+        if (collection.length) {
+            for (var i = 0; i < collection.length; i++) {
+                if (collection[i].id == id) {
+                    return collection[i];
+                }
+
+                let found = this.findById(collection[i].children, id);
+                if (found) return found;
+            }
+        }
+    }
 }

@@ -25,9 +25,17 @@ export class ArticleService {
         this.userId = Liferay.ThemeDisplay.getUserId();
     }
 
-    public getArticlesByCategory(category: Category): Promise<Response> {
+    public getArticlesByCategory(category: string, pager?: any): Promise<Response> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/v1
-        let articleListUrl =`${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/${apiVersion}`;
+        // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/page/{page}/size/{size}/v1
+        let articleListUrl;
+
+        if (pager) {
+            articleListUrl =
+                `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/page/${pager.page}/size/${pager.size}/${apiVersion}`;
+        } else {
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/${apiVersion}`;
+        }
 
         return this.http.get(articleListUrl)
             .map(function (res) {
@@ -36,7 +44,7 @@ export class ArticleService {
     }
 
     getArticleById(articleId: number) : Promise<any> {
-        //http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/content/{articleId}/user/{userId}/v1
+        // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/content/{articleId}/user/{userId}/v1
 
         let articleUrl =
             `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/content/${articleId}/user/${this.userId}/${apiVersion}`;
@@ -53,6 +61,16 @@ export class ArticleService {
                 updateUnreadJewels(response[0]);
 
                 return response[1];
+            }).toPromise();
+    }
+
+    getUnreadArticles() : Promise<any> {
+        // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/{userId}/page/{page}/size/{size}/v1
+        let unreadArticlesUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/${this.userId}/${apiVersion}`;
+
+        return this.http.get(unreadArticlesUrl)
+            .map(function (res) {
+                return res.json();
             }).toPromise();
     }
 }

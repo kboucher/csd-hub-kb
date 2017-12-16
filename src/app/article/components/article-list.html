@@ -1,49 +1,37 @@
-<div class="categories-navigation">
+<div class="articles-list-container" *ngIf="articles && articles.length && !selectedArticle">
     <div class="row">
-        <div class="col-sm-3 category-tree">
-            <category-tree-view
-                    [categories]="categories"
-                    [selectedCategory]="selectedCategory"
-                    (onSelected)="onSelected($event)">
-            </category-tree-view>
-        </div>
-        <div class="col-sm-9 category-articles">
-            <div class="articles-list-container" *ngIf="articles && articles.length && !selectedArticle">
-                <div class="row" *ngIf="articlesColumn1.length">
-                    <h3 class="col-sm-12">{{selectedCategory.text}} Articles</h3>
-                    <ol class="col-sm-6 articles-list">
-                        <li *ngFor="let article of articlesColumn1">
-                            <a href="#" (click)="viewArticle(article.id)">{{article.title}}</a>
-                        </li>
-                    </ol>
-                    <ol start="{{articlesColumn1.length + 1}}"
-                        class="col-sm-6 articles-list"
-                        *ngIf="articlesColumn2.length">
-                            <li *ngFor="let article of articlesColumn2">
-                                <a href="#" (click)="viewArticle(article.id)">{{article.title}}</a>
-                            </li>
-                    </ol>
-                </div>
-            </div>
-
-            <div class="no-articles-message" *ngIf="articles && !articles.length && !selectedArticle">
-                <span class="h3">
-                    <i class="icon icon-folder-open-alt"></i><br>
-                    <em>There are currently no <strong>{{selectedCategory.text}}</strong> articles available.</em>
-                </span>
-            </div>
-
-            <div class="article-container" *ngIf="selectedArticle">
-                <a href="#" (click)="goBackToList()" class="btn btn-default back-btn">
-                    <i class="icon icon-chevron-left"></i>
-                    Back to {{selectedCategory.text}} Articles
+        <h3 class="col-sm-12"
+            [class.col-md-6]="showPager">
+                {{selectedCategory.text}}
+        </h3>
+        <paginator
+            class="col-sm-12 col-md-6 text-right text-xs-left text-sm-left"
+            *ngIf="showPager"
+            [currentPage]="page"
+            [displayMax]="7"
+            [pages]="pages"
+            (goToPage)="goToPage($event)">
+        </paginator>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="list-group articles-list">
+                <a *ngFor="let article of articles"
+                    class="list-group-item"
+                    uiSref=".article"
+                    [uiParams]="{ articleId: article.id }"
+                    [uiOptions]="{ location: true }">
+                        {{article.title}}
+                        <span class="text-muted small">{{article.date | date:"MMM d, y"}}</span>
                 </a>
-                <h2>
-                    <span [innerHTML]="selectedArticle.title | preventOrphans"></span>
-                </h2>
-                <div [innerHTML]="selectedArticle.body | safe:html"></div>
-                <p><strong>Published/Updated:</strong> {{selectedArticle.date | date:"MMM d, y"}}</p>
             </div>
         </div>
     </div>
+</div>
+
+<div class="system-message no-articles" *ngIf="articles && !articles.length && !selectedArticle">
+    <span class="h3">
+        <i class="icon icon-folder-open-alt"></i><br>
+        <p>There are currently no <strong>{{selectedCategory.text}}</strong> articles available.</p>
+    </span>
 </div>
