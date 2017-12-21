@@ -2,6 +2,7 @@ declare var Liferay: any;
 
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { UIRouter } from '@uirouter/angular';
 
 // Import RxJs required methods
 import 'rxjs/add/operator/map';
@@ -15,17 +16,19 @@ const apiVersion = 'v1';
 export class CategoryService {
     private categoriesUrl: string;
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private uiRouter: UIRouter) {
         let portalUrl = Liferay.ThemeDisplay.getPortalURL();
         let groupId = Liferay.ThemeDisplay.getScopeGroupId();
 
         this.categoriesUrl = `${portalUrl}/o/kb-rest-api/category/${groupId}/tree/${apiVersion}`;
     }
 
-    public getCategories(): Promise<Response> {
+    public getCategories(): Promise<any> {
+        this.handleAnonymous();
+
         return this.http.get(this.categoriesUrl)
-            .map(function (res) {
-                return res.json();
+            .map((res) => {
+                return this.addStates(res.json());
             }).toPromise();
     }
 
@@ -42,6 +45,41 @@ export class CategoryService {
                 let found = this.findById(collection[i].children, id);
                 if (found) return found;
             }
+        }
+    }
+
+    /**
+        Recurses over categories and children to add
+        jsTree state objects.
+
+        @method addStates
+        @param {Category[]} categories Array of Category objects that need state added.
+     */
+    private addStates(categories: Category[]) {
+        function stateFactory() {
+            return {
+                disabled: false,
+                opened: false,
+                selected: false
+            };
+        }
+
+        for (let i = 0; i < categories.length; i++) {
+            categories[i].state = stateFactory();
+            if (categories[i].children.length) {
+                this.addStates(categories[i].children);
+            }
+        }
+
+        return categories;
+    }
+
+    // TODO: Refactor this into a service
+    private handleAnonymous() {
+        var isSignedIn = Liferay.ThemeDisplay.isSignedIn();
+
+        if (!isSignedIn) {
+            this.uiRouter.stateService.transitionTo('anonymous-user');
         }
     }
 }

@@ -1,11 +1,11 @@
 <div class="article-container" *ngIf="article">
-        <a class="btn btn-default back-btn"
+        <!-- <a class="btn btn-default back-btn"
             uiSref="categories.articles"
             [uiParams]="{ categoryId: category.id }"
             [uiOptions]="{ location: true }">
                 <i class="icon icon-chevron-left"></i>
                 Back to {{category.text}} Articles
-        </a>
+        </a> -->
     <h2>
         <span [innerHTML]="article.title | preventOrphans"></span>
     </h2>

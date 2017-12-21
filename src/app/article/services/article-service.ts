@@ -25,10 +25,30 @@ export class ArticleService {
         this.userId = Liferay.ThemeDisplay.getUserId();
     }
 
+    public getPageSize(): number {
+        let storedPageSize = window.localStorage.getItem('kbArticlesPageSize');
+
+        if (!storedPageSize) {
+            window.localStorage.setItem('kbArticlesPageSize', '25');
+            return 25;
+        }
+
+        return +storedPageSize;
+    }
+
+    public setPageSize(size: string) {
+        window.localStorage.setItem('kbArticlesPageSize', size.toString());
+    }
+
     public getArticlesByCategory(category: string, pager?: any): Promise<Response> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/v1
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/page/{page}/size/{size}/v1
         let articleListUrl;
+        let storedPageSize = this.getPageSize();
+
+        if (pager && +pager.size !== storedPageSize) {
+            this.setPageSize(pager.size);
+        }
 
         if (pager) {
             articleListUrl =
@@ -43,7 +63,7 @@ export class ArticleService {
             }).toPromise();
     }
 
-    getArticleById(articleId: number) : Promise<any> {
+    public getArticleById(articleId: number) : Promise<any> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/content/{articleId}/user/{userId}/v1
 
         let articleUrl =
@@ -64,11 +84,21 @@ export class ArticleService {
             }).toPromise();
     }
 
-    getUnreadArticles() : Promise<any> {
+    public getUnreadArticles() : Promise<any> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/{userId}/page/{page}/size/{size}/v1
         let unreadArticlesUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/${this.userId}/${apiVersion}`;
 
         return this.http.get(unreadArticlesUrl)
+            .map(function (res) {
+                return res.json();
+            }).toPromise();
+    }
+
+    public getUnreadCount(): Promise<any> {
+        // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadcount/{userId}/v1
+        var unreadCountUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadcount/${this.userId}/${apiVersion}`;
+
+        return this.http.get(unreadCountUrl)
             .map(function (res) {
                 return res.json();
             }).toPromise();

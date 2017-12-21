@@ -1,1 +1,31 @@
-<h1>UNREAD ARTICLES LIST</h1>
+<navigation-bar [unreadCount]="unreadCount"></navigation-bar>
+<div class="articles-list-container" *ngIf="articles && articles.length && !selectedArticle">
+    <div class="row">
+        <h3 class="col-sm-12"
+            [class.col-md-6]="showPager">
+                Unread Articles
+        </h3>
+        <paginator
+            class="col-sm-12 col-md-6 text-right text-xs-left text-sm-left"
+            *ngIf="showPager"
+            [currentPage]="page"
+            [displayMax]="7"
+            [pages]="pages"
+            (goToPage)="goToPage($event)">
+        </paginator>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="list-group articles-list">
+                <a *ngFor="let article of articles"
+                    class="list-group-item"
+                    uiSref="unread-articles.article"
+                    [uiParams]="{ articleId: article.id }"
+                    [uiOptions]="{ location: true }">
+                        {{article.title}}
+                        <span class="text-muted small">{{article.date | date:"MMM d, y"}}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

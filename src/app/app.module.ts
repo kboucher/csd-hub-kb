@@ -8,7 +8,8 @@ import { ArticleComponent } from './article/components/article.component';
 import { CategoryListComponent } from './category/components/category-list.component';
 import { TreeViewComponent } from './category/components/tree-view.component';
 import { UnreadArticlesComponent } from './article/components/unread-articles.component';
-import { Paginator } from './paginator/paginator.component';
+import { PaginatorComponent } from './paginator/paginator.component';
+import { NavigationBarComponent } from './navigation/navigation-bar.component';
 import { CategoryService } from './category/services/category-service';
 import { ArticleService } from './article/services/article-service';
 import { PreventOrphansPipe } from './pipes/prevent-orphans.pipe';
@@ -62,13 +63,28 @@ let categoriesState = {
 
 let articlesState = {
     name: 'categories.articles',
-    url: '/:categoryId/articles',
+    url: '/:categoryId/articles/page/:page/size/:size',
     resolve: [
         {
             token: 'articlesResponse',
             deps: [Transition, ArticleService],
             resolveFn: (trans, articleService) => {
-                return articleService.getArticlesByCategory(trans.params().categoryId, { page: 1, size: 2 });
+                return articleService.getArticlesByCategory(trans.params().categoryId, {
+                    page: trans.params().page,
+                    size: trans.params().size
+                });
+            }
+        }, {
+            token: 'categories',
+            deps: ['categories'],
+            resolveFn: (categories) => {
+                return categories;
+            }
+        }, {
+            token: 'pageSize',
+            deps: [Transition],
+            resolveFn: (trans) => {
+                return trans.params().size;
             }
         }, {
             token: 'selectedCategory',
@@ -79,7 +95,7 @@ let articlesState = {
         }
     ],
     views: {
-        "^.articles": { component: ArticleListComponent }
+        "!$default": { component: ArticleListComponent }
     }
 };
 
@@ -89,7 +105,7 @@ let unreadArticlesState = {
     component: UnreadArticlesComponent,
     resolve: [
         {
-            token: 'articles',
+            token: 'articlesResponse',
             deps: [ArticleService],
             resolveFn: (articleService) => articleService.getUnreadArticles()
         }
@@ -116,7 +132,22 @@ let articleState = {
         }
     ],
     views: {
-        "^.^.articles": { component: ArticleComponent }
+        "^.articles": { component: ArticleComponent }
+    }
+};
+
+let unreadArticleState = {
+    name: 'unread-articles.article',
+    url: '/:articleId',
+    resolve: [
+        {
+            token: 'article',
+            deps: [Transition, ArticleService],
+            resolveFn: (trans, articleService) => articleService.getArticleById(trans.params().articleId)
+        }
+    ],
+    views: {
+        "!$default": { component: ArticleComponent }
     }
 };
 
@@ -131,6 +162,7 @@ let articleState = {
                 articleState,
                 articlesState,
                 categoriesState,
+                unreadArticleState,
                 unreadArticlesState
             ],
             config: uiRouterConfigFn,
@@ -139,11 +171,12 @@ let articleState = {
     ],
     declarations: [
         AppComponent,
+        AnonymousUserComponent,
         ArticleComponent,
         ArticleListComponent,
-        AnonymousUserComponent,
         CategoryListComponent,
-        Paginator,
+        NavigationBarComponent,
+        PaginatorComponent,
         PreventOrphansPipe,
         SafePipe,
         TreeViewComponent,

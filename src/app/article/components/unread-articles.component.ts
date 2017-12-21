@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UIRouter } from '@uirouter/angular';
 
 import { Category } from '../../category/models/category';
@@ -10,9 +10,11 @@ import { ArticleService } from '../services/article-service';
     selector: 'unread-articles',
     templateUrl: './unread-articles.html'
 })
-export class UnreadArticlesComponent {
-    @Input() articles: Article[];
+export class UnreadArticlesComponent implements OnInit {
+    @Input() articlesResponse: any;
 
+    articles: Article[];
+    unreadCount: number = 0;
     selectedArticle: Article;
 
     constructor(
@@ -20,17 +22,19 @@ export class UnreadArticlesComponent {
         private _uiRouter: UIRouter
     ) {}
 
+    ngOnInit() {
+        this.articles = this.articlesResponse.articles;
+
+        // TODO: Remove this if we don't want to show this link in this view
+        this._articleService.getUnreadCount().then((unread) => {
+            this.unreadCount = unread.unreadCount;
+        });
+    }
+
     goBackToList() {
         this.selectedArticle = null;
 
         event.preventDefault();
-    }
-
-    onSelected($event) {
-        this._uiRouter.stateService.go('categories.articles', {
-            id: $event.category.id,
-            selectedCategory: $event.category
-        }, { location: true });
     }
 
     viewArticle(articleId: number) {

@@ -1,33 +1,67 @@
-<nav aria-label="Page navigation">
-    <ul class="pagination">
-        <li [class.disabled]="!prevPage">
-            <a href="#"
-                aria-label="Previous"
-                (click)="changePage(prevPage)"
-                *ngIf="prevPage">
-                    <span aria-hidden="true">&laquo;</span>
-            </a>
-            <span aria-hidden="true" *ngIf="!prevPage">&laquo;</span>
-        </li>
-        <li [class.active]="currentPage === pageNum"
-            [class.disabled]="pageNum === -1"
-            *ngFor="let pageNum of displayPages">
-                <a href="#"
-                    (click)=changePage(pageNum)
-                    *ngIf="currentPage !== pageNum && pageNum > 0">
-                        {{pageNum}}
-                </a>
-                <span *ngIf="currentPage === pageNum">{{pageNum}}</span>
-                <span *ngIf="pageNum === -1">&hellip;</span>
-        </li>
-        <li [class.disabled]="!nextPage">
-            <a href="#"
-                aria-label="Next"
-                (click)="changePage(nextPage)"
-                *ngIf="nextPage">
-                    <span aria-hidden="true">&raquo;</span>
-            </a>
-            <span aria-hidden="true" *ngIf="!nextPage">&raquo;</span>
-        </li>
-    </ul>
-</nav>
+<div class="row paginator">
+    <div class="col-sm-12 col-md-6 small page-info">
+        <span>
+            Showing
+            <strong><i>{{fromItem}}&ndash;{{toItem}}</i></strong>
+            of
+            <strong><i>{{totalArticleCount}}</i></strong>
+        </span>
+        &nbsp;
+        <div class="btn-group">
+            <button type="button"
+                class="btn btn-default btn-sm dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+                    {{pageSize}} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li *ngFor="let option of pageSizeOptions">
+                    <a href="#" [class.selected]="option === pageSize" (click)="changePageSize(option)">{{option}}</a>
+                </li>
+                <!--
+                    TODO: Uncomment this after wiring up "all records" state
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#" (click)="getAllRecords()">All</a></li>
+                -->
+            </ul>
+        </div>
+        &thinsp;
+        <span>per page</span>
+    </div>
+    <div class="col-sm-12 col-md-6 text-right text-xs-left text-sm-left">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li [class.disabled]="!prevPage">
+                    <a href="#"
+                        aria-label="Previous"
+                        (click)="changePage(prevPage)"
+                        *ngIf="prevPage">
+                            <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    <span aria-hidden="true" *ngIf="!prevPage">&laquo;</span>
+                </li>
+                <li [class.active]="currentPage === pageNum"
+                    [class.disabled]="pageNum === -1"
+                    *ngFor="let pageNum of displayPages">
+                        <a href="#"
+                            (click)=changePage(pageNum)
+                            *ngIf="currentPage !== pageNum && pageNum > 0">
+                                {{pageNum}}
+                        </a>
+                        <span *ngIf="currentPage === pageNum">{{pageNum}}</span>
+                        <span *ngIf="pageNum === -1">&hellip;</span>
+                </li>
+                <li [class.disabled]="!nextPage">
+                    <a href="#"
+                        aria-label="Next"
+                        (click)="changePage(nextPage)"
+                        *ngIf="nextPage">
+                            <span aria-hidden="true">&raquo;</span>
+                    </a>
+                    <span aria-hidden="true" *ngIf="!nextPage">&raquo;</span>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

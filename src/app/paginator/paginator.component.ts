@@ -4,24 +4,33 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     selector: 'paginator',
     templateUrl: './paginator.html'
 })
-export class Paginator {
+export class PaginatorComponent {
     @Input() currentPage: number;
     @Input() displayMax: number = 3;
     @Input() pages: number[];
+    @Input() pageArticleCount: number;
+    @Input() pageSize: number;
+    @Input() totalArticleCount: number;
     @Output() goToPage = new EventEmitter();
 
     displayPages: number[];
+    fromItem: number;
     nextPage: number;
+    pageSizeOptions: number[] = [10, 25, 50, 100];
     prevPage: number;
+    toItem: number;
 
     constructor() {}
 
     ngOnChanges() {
         let currentPage = this.currentPage;
+        let pageSize = this.pageSize;
         let totalPages = this.pages.length;
 
         this.prevPage = currentPage - 1 > 0 ? currentPage - 1 : null;
         this.nextPage = currentPage + 1 <= totalPages ? currentPage + 1 : null;
+        this.fromItem = currentPage * pageSize - pageSize + 1;
+        this.toItem = this.fromItem + (this.pageArticleCount - 1);
 
         // Trim page list down if desired
         if (this.displayMax < totalPages) {
@@ -34,7 +43,13 @@ export class Paginator {
     changePage(pageNum: number) {
         event.preventDefault();
 
-        this.goToPage.emit(pageNum);
+        this.goToPage.emit({pageNum, pageSize: this.pageSize});
+    }
+
+    changePageSize(pageSize: number) {
+        event.preventDefault();
+
+        this.goToPage.emit({pageNum: 1, pageSize});
     }
 
     setDisplayPages() {

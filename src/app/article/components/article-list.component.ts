@@ -14,15 +14,17 @@ import { ArticleService } from '../services/article-service';
 })
 export class ArticleListComponent implements OnInit {
     @Input() articlesResponse: any;
+    @Input() categories: Category[];
+    @Input() pageSize: number;
     @Input() selectedCategory: Category;
 
     articles: Article[];
     page: number;
     pages: number[] = [];
-    pageSize: number;
     selectedArticle: Article;
     showPager: boolean;
     total: number;
+    unreadCount: number = 0;
 
     constructor(
         private _articleService: ArticleService,
@@ -30,30 +32,44 @@ export class ArticleListComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        // Back to card view if no selected category (handles state issue with reload)
-        if (!this.selectedCategory) {
-            this._uiRouter.stateService.go('categories', null, { location: true });
-        } else {
-            this.articles = this.articlesResponse.articles;
-            this.page = this.articlesResponse.page;
-            this.pageSize = this.articlesResponse.size;
-            this.total = this.articlesResponse.total;
-            this.showPager = this.total > this.pageSize;
+        this._articleService.getUnreadCount().then((unread) => {
+            this.unreadCount = unread.unreadCount;
+        });
 
-            for (let i = 0; i < Math.ceil(this.total / this.pageSize); i++) {
-                this.pages.push(i + 1);
-            }
+        this.selectedCategory.state.selected = true;
+        this.selectedCategory.state.opened = true;
+
+        this.articles = this.articlesResponse.articles;
+        this.page = this.articlesResponse.page;
+        this.pageSize = this.articlesResponse.size;
+        this.total = this.articlesResponse.total;
+        this.showPager = this.total > this.pageSize;
+
+        for (let i = 0; i < Math.ceil(this.total / this.pageSize); i++) {
+            this.pages.push(i + 1);
         }
     }
 
-    goToPage(pageNum: number) {
-        this._articleService.getArticlesByCategory(this.selectedCategory.id, {
-            page: pageNum,
+    goToPage(options: any) {
+        this._uiRouter.stateService.go('categories.articles',
+            {
+                categoryId: this.selectedCategory.id,
+                page: options.pageNum,
+                size: options.pageSize
+            },
+            { location: true }
+        );
+    }
+
+    // Handles category tree-view click
+    onSelected($event) {
+        this.selectedCategory = $event.category;
+
+        this._uiRouter.stateService.go('categories.articles', {
+            categoryId: $event.category.id,
+            selectedCategory: $event.category,
+            page: 1,
             size: this.pageSize
-        }).then((response: any) => {
-            this.articles = response.articles;
-            this.page = response.page;
-            this.pageSize = response.size;
-        });
+        }, { location:true });
     }
 }
