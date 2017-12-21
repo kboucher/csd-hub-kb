@@ -1,5 +1,5 @@
 <navigation-bar [unreadCount]="unreadCount"></navigation-bar>
-<div class="articles-list-container" *ngIf="articles && articles.length && !selectedArticle">
+<div class="articles-list-container" *ngIf="articles.length">
     <div class="row">
         <h3 class="col-sm-12"
             [class.col-md-6]="showPager">
@@ -29,3 +29,9 @@
         </div>
     </div>
 </div>
+
+<no-articles
+    icon="icon-thumbs-up"
+    [message]="emptyMssg"
+    *ngIf="!articles.length">
+</no-articles>

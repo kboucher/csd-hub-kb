@@ -14,8 +14,8 @@ export class UnreadArticlesComponent implements OnInit {
     @Input() articlesResponse: any;
 
     articles: Article[];
+    emptyMssg: string = 'You\'re all caught up on unread articles! Visit the categories list for more.';
     unreadCount: number = 0;
-    selectedArticle: Article;
 
     constructor(
         private _articleService: ArticleService,
@@ -29,19 +29,5 @@ export class UnreadArticlesComponent implements OnInit {
         this._articleService.getUnreadCount().then((unread) => {
             this.unreadCount = unread.unreadCount;
         });
-    }
-
-    goBackToList() {
-        this.selectedArticle = null;
-
-        event.preventDefault();
-    }
-
-    viewArticle(articleId: number) {
-        this._articleService.getArticleById(articleId).then((article) => {
-            this.selectedArticle = article;
-        });
-
-        event.preventDefault();
     }
 }

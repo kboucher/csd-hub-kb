@@ -1,24 +1,30 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppComponent } from './app.component';
-import { AnonymousUserComponent } from './authentication/anonymous-user.component';
-import { ArticleListComponent } from './article/components/article-list.component';
-import { ArticleComponent } from './article/components/article.component';
-import { CategoryListComponent } from './category/components/category-list.component';
-import { TreeViewComponent } from './category/components/tree-view.component';
-import { UnreadArticlesComponent } from './article/components/unread-articles.component';
-import { PaginatorComponent } from './paginator/paginator.component';
-import { NavigationBarComponent } from './navigation/navigation-bar.component';
-import { CategoryService } from './category/services/category-service';
-import { ArticleService } from './article/services/article-service';
-import { PreventOrphansPipe } from './pipes/prevent-orphans.pipe';
-import { SafePipe } from './pipes/safe.pipe';
-
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { UIRouterModule, Transition } from '@uirouter/angular';
 import { uiRouterConfigFn } from './app.routerconfig';
+
+// Components
+import { AppComponent } from './app.component';
+import { AnonymousUserComponent } from './authentication/anonymous-user.component';
+import { ArticleComponent } from './article/components/article.component';
+import { ArticleListComponent } from './article/components/article-list.component';
+import { CategoryListComponent } from './category/components/category-list.component';
+import { NavigationBarComponent } from './navigation/navigation-bar.component';
+import { NoArticlesComponent } from './article/components/no-articles.component';
+import { PaginatorComponent } from './paginator/paginator.component';
+import { TreeViewComponent } from './category/components/tree-view.component';
+import { UnreadArticlesComponent } from './article/components/unread-articles.component';
+
+// Services
+import { CategoryService } from './category/services/category-service';
+import { ArticleService } from './article/services/article-service';
+
+// Pipes/utilities
+import { PreventOrphansPipe } from './pipes/prevent-orphans.pipe';
+import { SafePipe } from './pipes/safe.pipe';
+
 
 /**
     Recursively searches multidimensional array of objects
@@ -125,9 +131,9 @@ let articleState = {
             resolveFn: (trans, articleService) => articleService.getArticleById(trans.params().articleId)
         }, {
             token: 'category',
-            deps: [Transition, CategoryService, 'categories'],
-            resolveFn: (trans, categoryService, categories) => {
-                return categoryService.findById(categories, trans.params().categoryId);
+            deps: ['selectedCategory'],
+            resolveFn: (selectedCategory) => {
+                return selectedCategory;
             }
         }
     ],
@@ -176,6 +182,7 @@ let unreadArticleState = {
         ArticleListComponent,
         CategoryListComponent,
         NavigationBarComponent,
+        NoArticlesComponent,
         PaginatorComponent,
         PreventOrphansPipe,
         SafePipe,

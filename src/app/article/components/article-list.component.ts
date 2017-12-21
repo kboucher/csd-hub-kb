@@ -1,5 +1,3 @@
-declare var $: any; // declare global jquery
-
 import { Component, Input, OnInit } from '@angular/core';
 import { UIRouter } from '@uirouter/angular';
 
@@ -19,9 +17,9 @@ export class ArticleListComponent implements OnInit {
     @Input() selectedCategory: Category;
 
     articles: Article[];
+    emptyMssg: string;
     page: number;
     pages: number[] = [];
-    selectedArticle: Article;
     showPager: boolean;
     total: number;
     unreadCount: number = 0;
@@ -44,6 +42,10 @@ export class ArticleListComponent implements OnInit {
         this.pageSize = this.articlesResponse.size;
         this.total = this.articlesResponse.total;
         this.showPager = this.total > this.pageSize;
+
+        this.emptyMssg = 'There are currently no <strong>' +
+                this.selectedCategory.text +
+                '</strong> articles available.';
 
         for (let i = 0; i < Math.ceil(this.total / this.pageSize); i++) {
             this.pages.push(i + 1);

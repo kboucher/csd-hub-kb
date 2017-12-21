@@ -42,12 +42,11 @@
                 </div>
             </div>
 
-            <div class="system-message no-articles" *ngIf="articles && !articles.length && !selectedArticle">
-                <span class="h3">
-                    <i class="icon icon-folder-open-alt"></i><br>
-                    <p>There are currently no <strong>{{selectedCategory.text}}</strong> articles available.</p>
-                </span>
-            </div>
+            <no-articles
+                icon="icon-folder-open-alt"
+                [message]="emptyMssg"
+                *ngIf="!articles.length">
+            </no-articles>
         </ui-view>
     </div>
 </div>

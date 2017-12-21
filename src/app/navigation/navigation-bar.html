@@ -2,7 +2,7 @@
     <ol class="col-sm-12 breadcrumb kb-navigation-bar">
         <li><a uiSref="categories">Categories</a></li>
 
-        <li *ngIf="unreadCount > 0">
+        <li class="unread-articles" *ngIf="unreadCount > 0">
             <a uiSref="unread-articles" class="jewel-link">
                 Unread Articles
                 <span class="jewel-count">{{unreadCount}}</span>
