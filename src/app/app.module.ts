@@ -146,7 +146,7 @@ let articleState = {
         }
     ],
     views: {
-        "^.articles": { component: ArticleComponent }
+        "^.article": { component: ArticleComponent }
     }
 };
 
@@ -161,7 +161,7 @@ let unreadArticleState = {
         }
     ],
     views: {
-        "^.articles": { component: ArticleComponent }
+        "^.article": { component: ArticleComponent }
     }
 };
 

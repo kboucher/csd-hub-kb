@@ -7,46 +7,52 @@
             (onSelected)="onSelected($event)">
         </category-tree-view>
     </div>
-    <div class="col-xs-12 col-sm-9 col-lg-10 category-articles">
-        <ui-view name="articles">
-            <div class="articles-list-container" *ngIf="articles.length">
-                <div class="row">
-                    <h3 class="col-sm-12">
-                        <ng-container *ngIf="selectedCategory">{{selectedCategory.text}}</ng-container>
-                        <ng-container *ngIf="!selectedCategory">Unread Articles</ng-container>
-                    </h3>
-                </div>
-                <paginator
-                        *ngIf="showPager"
-                        [currentPage]="page"
-                        [displayMax]="7"
-                        [pages]="pages"
-                        [pageArticleCount]="articles.length"
-                        [pageSize]="pageSize"
-                        [totalArticleCount]="total"
-                        (goToPage)="goToPage($event)">
-                </paginator>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="list-group articles-list">
-                            <a *ngFor="let article of articles"
-                                class="list-group-item"
-                                uiSref=".article"
-                                [uiParams]="{ articleId: article.id }"
-                                [uiOptions]="{ location: true }">
-                                    {{article.title}}
-                                    <span class="text-muted small">{{article.date | date:"MMM d, y"}}</span>
-                            </a>
+    <div class="category-articles col-xs-12"
+        [class.col-sm-3]="isArticle"
+        [class.col-sm-9]="!isArticle"
+        [class.col-lg-10]="!isArticle">
+            <ui-view name="articles">
+                <div class="articles-list-container" [class.compact]="isArticle" *ngIf="articles.length">
+                    <div class="row">
+                        <h3 class="col-sm-12">
+                            <ng-container *ngIf="selectedCategory">{{selectedCategory.text}}</ng-container>
+                            <ng-container *ngIf="!selectedCategory">Unread Articles</ng-container>
+                        </h3>
+                    </div>
+                    <paginator
+                            *ngIf="showPager"
+                            [currentPage]="page"
+                            [displayMax]="7"
+                            [pages]="pages"
+                            [pageArticleCount]="articles.length"
+                            [pageSize]="pageSize"
+                            [totalArticleCount]="total"
+                            (goToPage)="goToPage($event)">
+                    </paginator>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="list-group articles-list">
+                                <a *ngFor="let article of articles"
+                                    class="list-group-item"
+                                    uiSref=".article"
+                                    [uiParams]="{ articleId: article.id }"
+                                    [uiOptions]="{ location: true }">
+                                        {{article.title}}
+                                        <span class="text-muted small">{{article.date | date:"MMM d, y"}}</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <no-articles
-                icon="icon-folder-open-alt"
-                [message]="emptyMssg"
-                *ngIf="!articles.length">
-            </no-articles>
-        </ui-view>
+                <no-articles
+                    icon="icon-folder-open-alt"
+                    [message]="emptyMssg"
+                    *ngIf="!articles.length">
+                </no-articles>
+            </ui-view>
+    </div>
+    <div class="article-container col-xs-12 col-sm-6 col-lg-7" *ngIf="isArticle">
+        <ui-view name="article"></ui-view>
     </div>
 </div>

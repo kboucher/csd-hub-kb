@@ -19,6 +19,7 @@ export class ArticleListComponent implements OnInit {
     articles: Article[];
     emptyMssg: string;
     emptyMssgIcon: string;
+    isArticle: boolean = false;
     page: number;
     pages: number[] = [];
     showPager: boolean;
@@ -31,6 +32,19 @@ export class ArticleListComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        // Handle direct links to articles
+        if (/\.article$/.test(this._uiRouter.stateService.$current.name)) {
+            this.isArticle = true;
+        }
+
+        // Handle subsequents state changes between articles list and individual articles
+        this._uiRouter.transitionService.onEnter({ entering: '**.article' }, (trans) => {
+            this.isArticle = true;
+        });
+        this._uiRouter.transitionService.onExit({ exiting: '**.article' }, (trans) => {
+            this.isArticle = false;
+        });
+
         this._articleService.getUnreadCount().then((unread) => {
             this.unreadCount = unread.unreadCount;
         });
