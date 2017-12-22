@@ -4,8 +4,6 @@ import { Pipe, Injectable } from '@angular/core';
     name: 'preventOrphans'
 })
 export class PreventOrphansPipe {
-    constructor() {}
-
     public transform(value: string) {
         var stringArr = value.trim().split(' ');
 

@@ -20,8 +20,6 @@ export class PaginatorComponent {
     prevPage: number;
     toItem: number;
 
-    constructor() {}
-
     ngOnChanges() {
         let currentPage = this.currentPage;
         let pageSize = this.pageSize;

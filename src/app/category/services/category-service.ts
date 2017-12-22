@@ -74,6 +74,25 @@ export class CategoryService {
         return categories;
     }
 
+    /**
+        Recurses over categories and children to deselect
+        and close all jsTree state objects.
+
+        @method deselectAll
+        @param {Category[]} categories Array of Category objects that need to be deselected.
+     */
+    public deselectAll(categories: Category[]): Category[] {
+        for (let i = 0; i < categories.length; i++) {
+            categories[i].state.selected = false;
+
+            if (categories[i].children.length) {
+                this.deselectAll(categories[i].children);
+            }
+        }
+
+        return categories;
+    }
+
     // TODO: Refactor this into a service
     private handleAnonymous() {
         var isSignedIn = Liferay.ThemeDisplay.isSignedIn();

@@ -1,5 +1,5 @@
 <div class="row paginator">
-    <div class="col-sm-12 col-md-6 small page-info">
+    <div class="hidden-xs col-sm-6 small page-info">
         <span>
             Showing
             <strong><i>{{fromItem}}&ndash;{{toItem}}</i></strong>
@@ -29,7 +29,7 @@
         &thinsp;
         <span>per page</span>
     </div>
-    <div class="col-sm-12 col-md-6 text-right text-xs-left text-sm-left">
+    <div class="col-xs-12 col-sm-6 text-xs-left text-sm-right">
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 <li [class.disabled]="!prevPage">

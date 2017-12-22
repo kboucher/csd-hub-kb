@@ -3,9 +3,12 @@
         <li><a uiSref="categories">Categories</a></li>
 
         <li class="unread-articles" *ngIf="unreadCount > 0">
-            <a uiSref="unread-articles" class="jewel-link">
-                Unread Articles
-                <span class="jewel-count">{{unreadCount}}</span>
+            <a uiSref="categories.unread-articles"
+                [uiParams]="{ page: 1, size: pageSize }"
+                [uiOptions]="{ location: true }"
+                class="jewel-link">
+                    Unread Articles
+                    <span class="jewel-count">{{unreadCount}}</span>
             </a>
         </li>
     </ol>

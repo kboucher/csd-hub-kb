@@ -15,7 +15,6 @@ import { NavigationBarComponent } from './navigation/navigation-bar.component';
 import { NoArticlesComponent } from './article/components/no-articles.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { TreeViewComponent } from './category/components/tree-view.component';
-import { UnreadArticlesComponent } from './article/components/unread-articles.component';
 
 // Services
 import { CategoryService } from './category/services/category-service';
@@ -106,18 +105,27 @@ let articlesState = {
 };
 
 let unreadArticlesState = {
-    name: 'unread-articles',
-    url: '/unread-articles',
-    component: UnreadArticlesComponent,
+    name: 'categories.unread-articles',
+    url: '/unread-articles/page/:page/size/:size',
     resolve: [
         {
             token: 'articlesResponse',
-            deps: [ArticleService],
-            resolveFn: (articleService) => articleService.getUnreadArticles()
+            deps: [Transition, ArticleService],
+            resolveFn: (trans, articleService) => articleService.getUnreadArticles({
+                page: trans.params().page,
+                size: trans.params().size
+            })
+        }, {
+            token: 'categories',
+            deps: ['categories', CategoryService],
+            resolveFn: (categories, categoryService) => {
+                // TODO: Could this be done directly on the selected category via transition hook?
+                return categoryService.deselectAll(categories);
+            }
         }
     ],
     views: {
-        "!$default": { component: UnreadArticlesComponent }
+        "!$default": { component: ArticleListComponent }
     }
 };
 
@@ -143,8 +151,8 @@ let articleState = {
 };
 
 let unreadArticleState = {
-    name: 'unread-articles.article',
-    url: '/:articleId',
+    name: 'categories.unread-articles.article',
+    url: '/unread-articles/:articleId',
     resolve: [
         {
             token: 'article',
@@ -153,7 +161,7 @@ let unreadArticleState = {
         }
     ],
     views: {
-        "!$default": { component: ArticleComponent }
+        "^.articles": { component: ArticleComponent }
     }
 };
 
@@ -187,7 +195,6 @@ let unreadArticleState = {
         PreventOrphansPipe,
         SafePipe,
         TreeViewComponent,
-        UnreadArticlesComponent,
     ],
     providers: [ArticleService, CategoryService],
     bootstrap: [AppComponent]

@@ -14,10 +14,11 @@ export class ArticleListComponent implements OnInit {
     @Input() articlesResponse: any;
     @Input() categories: Category[];
     @Input() pageSize: number;
-    @Input() selectedCategory: Category;
+    @Input() selectedCategory?: Category;
 
     articles: Article[];
     emptyMssg: string;
+    emptyMssgIcon: string;
     page: number;
     pages: number[] = [];
     showPager: boolean;
@@ -34,18 +35,25 @@ export class ArticleListComponent implements OnInit {
             this.unreadCount = unread.unreadCount;
         });
 
-        this.selectedCategory.state.selected = true;
-        this.selectedCategory.state.opened = true;
-
         this.articles = this.articlesResponse.articles;
         this.page = this.articlesResponse.page;
         this.pageSize = this.articlesResponse.size;
         this.total = this.articlesResponse.total;
         this.showPager = this.total > this.pageSize;
 
-        this.emptyMssg = 'There are currently no <strong>' +
-                this.selectedCategory.text +
-                '</strong> articles available.';
+        // Handle category vs. unread-articles lists
+        if (this.selectedCategory) {
+            this.selectedCategory.state.selected = true;
+            this.selectedCategory.state.opened = true;
+
+            this.emptyMssg = 'There are currently no <strong>' +
+                    this.selectedCategory.text +
+                    '</strong> articles available.';
+            this.emptyMssgIcon = 'icon-folder-open-alt';
+        } else {
+            this.emptyMssg = 'You\'re all caught up on unread articles!';
+            this.emptyMssgIcon = 'icon-thumbs-up';
+        }
 
         for (let i = 0; i < Math.ceil(this.total / this.pageSize); i++) {
             this.pages.push(i + 1);
@@ -53,14 +61,19 @@ export class ArticleListComponent implements OnInit {
     }
 
     goToPage(options: any) {
-        this._uiRouter.stateService.go('categories.articles',
-            {
-                categoryId: this.selectedCategory.id,
-                page: options.pageNum,
-                size: options.pageSize
-            },
-            { location: true }
-        );
+        let state = this.selectedCategory ?
+                'categories.articles' :
+                'categories.unread-articles';
+        let params = {
+            page: options.pageNum,
+            size: options.pageSize
+        };
+
+        if (this.selectedCategory) {
+            params['categoryId'] = this.selectedCategory.id;
+        }
+
+        this._uiRouter.stateService.go(state, params, { location: true });
     }
 
     // Handles category tree-view click

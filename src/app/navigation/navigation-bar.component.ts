@@ -5,6 +5,7 @@ import { Component, Input } from '@angular/core';
     templateUrl: './navigation-bar.html'
 })
 export class NavigationBarComponent {
+    @Input() pageSize: number;
     @Input() unreadCount: number;
 
     constructor() {}

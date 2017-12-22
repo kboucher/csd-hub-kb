@@ -84,11 +84,25 @@ export class ArticleService {
             }).toPromise();
     }
 
-    public getUnreadArticles() : Promise<any> {
+    public getUnreadArticles(pager?: any) : Promise<any> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/{userId}/page/{page}/size/{size}/v1
-        let unreadArticlesUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/${this.userId}/${apiVersion}`;
+        // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/{userId}/v1
 
-        return this.http.get(unreadArticlesUrl)
+        let articleListUrl;
+        let storedPageSize = this.getPageSize();
+
+        if (pager && +pager.size !== storedPageSize) {
+            this.setPageSize(pager.size);
+        }
+
+        if (pager) {
+            articleListUrl =
+                `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/${this.userId}/page/${pager.page}/size/${pager.size}/${apiVersion}`;
+        } else {
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/${this.userId}/${apiVersion}`;
+        }
+
+        return this.http.get(articleListUrl)
             .map(function (res) {
                 return res.json();
             }).toPromise();
