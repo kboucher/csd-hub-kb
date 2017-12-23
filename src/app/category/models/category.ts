@@ -4,6 +4,6 @@ export class Category {
         public id: string,
         public image: string,
         public state: any,
-        public children: Array<Category>
+        public children: Category[],
     ) {}
 }

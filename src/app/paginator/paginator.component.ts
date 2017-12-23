@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'paginator',
-    templateUrl: './paginator.html'
+    styleUrls: ['./paginator.css'],
+    templateUrl: './paginator.html',
 })
 export class PaginatorComponent {
     @Input() currentPage: number;
@@ -21,9 +22,9 @@ export class PaginatorComponent {
     toItem: number;
 
     ngOnChanges() {
-        let currentPage = this.currentPage;
-        let pageSize = this.pageSize;
-        let totalPages = this.pages.length;
+        const currentPage = this.currentPage;
+        const pageSize = this.pageSize;
+        const totalPages = this.pages.length;
 
         this.prevPage = currentPage - 1 > 0 ? currentPage - 1 : null;
         this.nextPage = currentPage + 1 <= totalPages ? currentPage + 1 : null;
@@ -51,9 +52,8 @@ export class PaginatorComponent {
     }
 
     setDisplayPages() {
-        let pages = [];
-
-        let half = Math.floor(this.displayMax / 2);
+        const pages = [];
+        const half = Math.floor(this.displayMax / 2);
         let start = this.currentPage - half + 1 - this.displayMax % 2;
         let end = this.currentPage + half;
         let iterator;

@@ -1,0 +1,10 @@
+.knowledge-base-portlet {
+    background: transparent;
+    border-color: transparent;
+    padding: 0 15px 1px;
+}
+
+.knowledge-base-portlet h2 {
+    letter-spacing: -.8px;
+    margin-top: 10px;
+}

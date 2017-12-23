@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 
-import { Article } from '../models/article';
 import { Category } from '../../category/models/category';
+import { Article } from '../models/article';
 
 @Component({
     selector: 'article',
-    templateUrl: './article.html'
+    styleUrls: ['./article.css'],
+    templateUrl: './article.html',
 })
 export class ArticleComponent {
     @Input() article: Article;

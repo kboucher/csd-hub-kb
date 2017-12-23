@@ -1,0 +1,24 @@
+.system-notification {
+    align-items: center;
+    color: #999;
+    display: flex;
+    height: 50vh;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.system-notification span {
+    max-width: 25em;
+    line-height: inherit;
+}
+
+.system-notification i.icon {
+    display: inline-block;
+    font-size: 6rem;
+    margin-bottom: 2rem;
+}
+
+.system-notification p {
+    font-style: italic;
+}

@@ -1,0 +1,32 @@
+.article {
+    line-height: 1.618;
+    max-width: 45em;
+    margin: 0 auto;
+}
+
+.article h2:first-of-type {
+    margin: 1em auto;
+    max-width: 25em;
+    position: relative;
+    text-align: center;
+}
+
+.article .back-btn {
+    border-color: #ddd;
+    color: #999;
+    position: absolute;
+    top: 7.5px;
+    right: 7.5px;
+}
+
+/* Style article content (from Liferay) here, using ng-deep */
+.article >>> h2,
+.article >>> h3,
+.article >>> h4 {
+    color: #004e87;
+}
+
+.article >>> p {
+    font-size: 1rem;
+    margin: 1.618em 0;
+}

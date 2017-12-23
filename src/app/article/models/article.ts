@@ -3,6 +3,6 @@ export class Article {
         public title: string,
         public id: number,
         public date: string,
-        public body?: string
+        public body?: string,
     ) {}
 }

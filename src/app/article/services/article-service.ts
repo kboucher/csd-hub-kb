@@ -2,22 +2,22 @@ declare var Liferay: any;
 declare var updateUnreadJewels: any; // global unread jewel update function
 
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 
 // Import RxJs required methods
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { Article } from '../models/article';
 import { Category } from '../../category/models/category';
+import { Article } from '../models/article';
 
 const apiVersion = 'v1';
 
 @Injectable()
 export class ArticleService {
-    private groupId: string;
-    private portalUrl: string;
-    private userId: string;
+    groupId: string;
+    portalUrl: string;
+    userId: string;
 
     constructor(private http: Http) {
         this.groupId = Liferay.ThemeDisplay.getScopeGroupId();
@@ -26,7 +26,7 @@ export class ArticleService {
     }
 
     public getPageSize(): number {
-        let storedPageSize = window.localStorage.getItem('kbArticlesPageSize');
+        const storedPageSize = window.localStorage.getItem('kbArticlesPageSize');
 
         if (!storedPageSize) {
             window.localStorage.setItem('kbArticlesPageSize', '25');
@@ -44,7 +44,7 @@ export class ArticleService {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/v1
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/page/{page}/size/{size}/v1
         let articleListUrl;
-        let storedPageSize = this.getPageSize();
+        const storedPageSize = this.getPageSize();
 
         if (pager && +pager.size !== storedPageSize) {
             this.setPageSize(pager.size);
@@ -52,29 +52,33 @@ export class ArticleService {
 
         if (pager) {
             articleListUrl =
-                `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/page/${pager.page}/size/${pager.size}/${apiVersion}`;
+                `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/
+${category}/page/${pager.page}/size/${pager.size}/${apiVersion}`;
         } else {
-            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/${apiVersion}`;
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/
+${category}/${apiVersion}`;
         }
 
         return this.http.get(articleListUrl)
-            .map(function (res) {
+            .map((res) => {
                 return res.json();
             }).toPromise();
     }
 
-    public getArticleById(articleId: number) : Promise<any> {
+    public getArticleById(articleId: number): Promise<any> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/content/{articleId}/user/{userId}/v1
 
-        let articleUrl =
-            `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/content/${articleId}/user/${this.userId}/${apiVersion}`;
+        const articleUrl =
+            `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/content/
+${articleId}/user/${this.userId}/${apiVersion}`;
 
         return this.http.get(articleUrl)
             .map((res) => {
-                let response = res.json();
+                const response = res.json();
 
                 if (!response.length || response.length !== 2) {
-                    throw(new TypeError('ArticleService Error: Expected web service to return an Unread Articles object and an Article object.'));
+                    throw(new TypeError('ArticleService Error: Expected web service to return' +
+                    'an Unread Articles object and an Article object.'));
                 }
 
                 // calls global function on the theme
@@ -84,12 +88,12 @@ export class ArticleService {
             }).toPromise();
     }
 
-    public getUnreadArticles(pager?: any) : Promise<any> {
+    public getUnreadArticles(pager?: any): Promise<any> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/{userId}/page/{page}/size/{size}/v1
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/{userId}/v1
 
         let articleListUrl;
-        let storedPageSize = this.getPageSize();
+        const storedPageSize = this.getPageSize();
 
         if (pager && +pager.size !== storedPageSize) {
             this.setPageSize(pager.size);
@@ -97,23 +101,26 @@ export class ArticleService {
 
         if (pager) {
             articleListUrl =
-                `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/${this.userId}/page/${pager.page}/size/${pager.size}/${apiVersion}`;
+                `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/
+${this.userId}/page/${pager.page}/size/${pager.size}/${apiVersion}`;
         } else {
-            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/${this.userId}/${apiVersion}`;
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/
+${this.userId}/${apiVersion}`;
         }
 
         return this.http.get(articleListUrl)
-            .map(function (res) {
+            .map((res) => {
                 return res.json();
             }).toPromise();
     }
 
     public getUnreadCount(): Promise<any> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadcount/{userId}/v1
-        var unreadCountUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadcount/${this.userId}/${apiVersion}`;
+        const unreadCountUrl = `${this.portalUrl}/o/kb-rest-api/article/
+${this.groupId}/unreadcount/${this.userId}/${apiVersion}`;
 
         return this.http.get(unreadCountUrl)
-            .map(function (res) {
+            .map((res) => {
                 return res.json();
             }).toPromise();
     }

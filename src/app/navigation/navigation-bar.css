@@ -1,0 +1,12 @@
+/* Bootstrap breadcrumb styles are pulling double-duty */
+.breadcrumb {
+    margin-bottom: 15px;
+}
+
+.breadcrumb.kb-navigation-bar > li + li:before {
+    content: '|';
+}
+
+.breadcrumb .jewel-count {
+    padding-left: 3px;
+}

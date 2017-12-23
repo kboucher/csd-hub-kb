@@ -8,7 +8,8 @@ import { ArticleService } from '../services/article-service';
 @Component({
     providers: [ArticleService],
     selector: 'article-list',
-    templateUrl: './article-list.html'
+    styleUrls: ['./article-list.css'],
+    templateUrl: './article-list.html',
 })
 export class ArticleListComponent implements OnInit {
     @Input() articlesResponse: any;
@@ -16,36 +17,36 @@ export class ArticleListComponent implements OnInit {
     @Input() pageSize: number;
     @Input() selectedCategory?: Category;
 
+    isArticleState: boolean = false;
+    unreadCount: number = 0;
     articles: Article[];
     emptyMssg: string;
     emptyMssgIcon: string;
-    isArticle: boolean = false;
     page: number;
     pages: number[] = [];
     showPager: boolean;
     total: number;
-    unreadCount: number = 0;
 
     constructor(
-        private _articleService: ArticleService,
-        private _uiRouter: UIRouter
+        private articleService: ArticleService,
+        private uiRouter: UIRouter,
     ) {}
 
     ngOnInit() {
         // Handle direct links to articles
-        if (/\.article$/.test(this._uiRouter.stateService.$current.name)) {
-            this.isArticle = true;
+        if (/\.article$/.test(this.uiRouter.stateService.$current.name)) {
+            this.isArticleState = true;
         }
 
         // Handle subsequents state changes between articles list and individual articles
-        this._uiRouter.transitionService.onEnter({ entering: '**.article' }, (trans) => {
-            this.isArticle = true;
+        this.uiRouter.transitionService.onEnter({ entering: '**.article' }, (trans) => {
+            this.isArticleState = true;
         });
-        this._uiRouter.transitionService.onExit({ exiting: '**.article' }, (trans) => {
-            this.isArticle = false;
+        this.uiRouter.transitionService.onExit({ exiting: '**.article' }, (trans) => {
+            this.isArticleState = false;
         });
 
-        this._articleService.getUnreadCount().then((unread) => {
+        this.articleService.getUnreadCount().then((unread) => {
             this.unreadCount = unread.unreadCount;
         });
 
@@ -75,30 +76,31 @@ export class ArticleListComponent implements OnInit {
     }
 
     goToPage(options: any) {
-        let state = this.selectedCategory ?
+        const state = this.selectedCategory ?
                 'categories.articles' :
                 'categories.unread-articles';
-        let params = {
+        const params = {
+            categoryId: null,
             page: options.pageNum,
-            size: options.pageSize
+            size: options.pageSize,
         };
 
         if (this.selectedCategory) {
-            params['categoryId'] = this.selectedCategory.id;
+            params.categoryId = this.selectedCategory.id;
         }
 
-        this._uiRouter.stateService.go(state, params, { location: true });
+        this.uiRouter.stateService.go(state, params, { location: true });
     }
 
     // Handles category tree-view click
     onSelected($event) {
         this.selectedCategory = $event.category;
 
-        this._uiRouter.stateService.go('categories.articles', {
+        this.uiRouter.stateService.go('categories.articles', {
             categoryId: $event.category.id,
             selectedCategory: $event.category,
             page: 1,
-            size: this.pageSize
-        }, { location:true });
+            size: this.pageSize,
+        }, { location: true });
     }
 }

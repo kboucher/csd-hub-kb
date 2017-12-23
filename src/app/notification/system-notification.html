@@ -1,0 +1,6 @@
+<div class="system-notification {(notificationClass)}}">
+    <span class="h3">
+        <i class="icon {{icon}}"></i><br>
+        <p [innerHTML]="message | preventOrphans | safe:html"></p>
+    </span>
+</div>

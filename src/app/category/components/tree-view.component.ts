@@ -1,6 +1,6 @@
 declare var $: any; // declare global jquery
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation  } from '@angular/core';
 import { Category } from '../models/category';
 import { CategoryService } from '../services/category-service';
 
@@ -8,10 +8,12 @@ const treeSelector = '#category-tree';
 
 @Component({
     selector: 'category-tree-view',
-    templateUrl: './tree-view.html'
+    styleUrls: ['./tree-view.css'],
+    templateUrl: './tree-view.html',
+    encapsulation: ViewEncapsulation.None,
 })
 export class TreeViewComponent implements OnInit {
-    @Input() categories: Array<Category>;
+    @Input() categories: Category[];
     @Input() selectedCategory: Category;
     @Output() onSelected = new EventEmitter();
 
@@ -26,22 +28,22 @@ export class TreeViewComponent implements OnInit {
         $.jstree.defaults.search.show_only_matches = true;
 
         $(treeSelector).on('select_node.jstree', function(e, data) {
-            let category = this.categoryService.findById(this.categories, data.node.id);
+            const category = this.categoryService.findById(this.categories, data.node.id);
 
             this.select(category);
         }.bind(this)).jstree({
-            'core': {
-                'data': this.categories
+            core: {
+                data: this.categories,
             },
-            'plugins': [ 'search' ]
+            plugins: [ 'search' ],
         });
 
         /*
             Initializes tree view filter, can also be amended to process
             on form submit instead of keyup event.
         */
-        $("#category-tree-filter-input").keyup(function(e) {
-            $(treeSelector).jstree(true).search($("#category-tree-filter-input").val());
+        $('#category-tree-filter-input').keyup((e) => {
+            $(treeSelector).jstree(true).search($('#category-tree-filter-input').val());
         });
     }
 
