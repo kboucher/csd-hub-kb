@@ -7,7 +7,7 @@ import { CategoryService } from '../services/category-service';
 const treeSelector = '#category-tree';
 
 @Component({
-    selector: 'category-tree-view',
+    selector: 'kb-category-tree-view',
     styleUrls: ['./tree-view.css'],
     templateUrl: './tree-view.html',
     encapsulation: ViewEncapsulation.None,
@@ -15,7 +15,7 @@ const treeSelector = '#category-tree';
 export class TreeViewComponent implements OnInit {
     @Input() categories: Category[];
     @Input() selectedCategory: Category;
-    @Output() onSelected = new EventEmitter();
+    @Output() selected = new EventEmitter();
 
     constructor(private categoryService: CategoryService) {}
 
@@ -52,6 +52,6 @@ export class TreeViewComponent implements OnInit {
             this.selectedCategory.state.selected = false;
         }
         category.state.selected = true;
-        this.onSelected.emit({event, category});
+        this.selected.emit({event, category});
     }
 }

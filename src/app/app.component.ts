@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app',
+    selector: 'kb-app',
     styleUrls: ['./app.css'],
     templateUrl: './app.html',
 })

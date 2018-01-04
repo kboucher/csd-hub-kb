@@ -12,6 +12,7 @@ import { ArticleComponent } from './article/components/article.component';
 import { AnonymousUserComponent } from './authentication/anonymous-user.component';
 import { CategoryListComponent } from './category/components/category-list.component';
 import { TreeViewComponent } from './category/components/tree-view.component';
+import { ErrorComponent } from './error/error.component';
 import { NavigationBarComponent } from './navigation/navigation-bar.component';
 import { SystemNotificationComponent } from './notification/system-notification.component';
 import { PaginatorComponent } from './paginator/paginator.component';
@@ -27,9 +28,26 @@ import { SafePipe } from './pipes/safe.pipe';
 const anonymousUserState = {
     name: 'anonymous-user',
     url: '/anonymous-user',
-    component: AnonymousUserComponent,
     views: {
         '!$default': { component: AnonymousUserComponent },
+    },
+};
+
+const errorState = {
+    name: 'error',
+    url: '/error',
+    resolve: [
+        {
+            token: 'error',
+            deps: [Transition],
+            resolveFn: (trans) => {
+                // TODO: Why aren't ˋparamsˋ accessible via ˋtrans.params()ˋ?
+                return trans.targetState()._params.error;
+            },
+        },
+    ],
+    views: {
+        '!$default': { component: ErrorComponent },
     },
 };
 
@@ -158,6 +176,7 @@ const unreadArticleState = {
                 articleState,
                 articlesState,
                 categoriesState,
+                errorState,
                 unreadArticleState,
                 unreadArticlesState,
             ],
@@ -171,6 +190,7 @@ const unreadArticleState = {
         ArticleComponent,
         ArticleListComponent,
         CategoryListComponent,
+        ErrorComponent,
         NavigationBarComponent,
         PaginatorComponent,
         PreventOrphansPipe,

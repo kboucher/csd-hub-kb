@@ -7,6 +7,10 @@
     margin-right: -15px;
 }
 
+.categories-navigation > div {
+    transition: width .25s;
+}
+
 .category-tree {
     border-right: solid #eee 1px;
     overflow-x: auto;

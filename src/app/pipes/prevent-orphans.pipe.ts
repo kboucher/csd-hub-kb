@@ -1,9 +1,9 @@
-import { Injectable, Pipe } from '@angular/core';
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
     name: 'preventOrphans',
 })
-export class PreventOrphansPipe {
+export class PreventOrphansPipe implements PipeTransform {
     public transform(value: string) {
         const stringArr = value.trim().split(' ');
 

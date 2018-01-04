@@ -6,9 +6,9 @@
             uiSref="categories.articles"
             [uiParams]="{ categoryId: category.id, page: 1, size: pageSize }"
             [uiOptions]="{ location: true }"
-            title="{{category.text}}">
-                <img src="{{category.image}}" class="icon">
-                <h4>{{category.text}}</h4>
+            title="{{ category.text }}">
+                <img src="{{ category.image }}" class="icon">
+                <h4>{{ category.text }}</h4>
         </a>
     </div>
 </div>

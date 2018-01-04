@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 @Component({
-    selector: 'paginator',
+    selector: 'kb-paginator',
     styleUrls: ['./paginator.css'],
     templateUrl: './paginator.html',
 })
-export class PaginatorComponent {
+export class PaginatorComponent implements OnChanges {
     @Input() currentPage: number;
     @Input() displayMax: number = 3;
     @Input() pages: number[];

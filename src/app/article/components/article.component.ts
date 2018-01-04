@@ -4,7 +4,7 @@ import { Category } from '../../category/models/category';
 import { Article } from '../models/article';
 
 @Component({
-    selector: 'article',
+    selector: 'kb-article',
     styleUrls: ['./article.css'],
     templateUrl: './article.html',
 })

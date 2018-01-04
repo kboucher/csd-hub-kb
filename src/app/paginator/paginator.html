@@ -2,9 +2,9 @@
     <div class="hidden-xs col-sm-6 small page-info">
         <span>
             Showing
-            <strong><i>{{fromItem}}&ndash;{{toItem}}</i></strong>
+            <strong><i>{{ fromItem }}&ndash;{{ toItem }}</i></strong>
             of
-            <strong><i>{{totalArticleCount}}</i></strong>
+            <strong><i>{{ totalArticleCount }}</i></strong>
         </span>
         &nbsp;
         <div class="btn-group">
@@ -13,11 +13,11 @@
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false">
-                    {{pageSize}} <span class="caret"></span>
+                    {{ pageSize }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li *ngFor="let option of pageSizeOptions">
-                    <a href="#" [class.selected]="option === pageSize" (click)="changePageSize(option)">{{option}}</a>
+                    <a href="#" [class.selected]="option === pageSize" (click)="changePageSize(option)">{{ option }}</a>
                 </li>
                 <!--
                     TODO: Uncomment this after wiring up "all records" state
@@ -47,9 +47,9 @@
                         <a href="#"
                             (click)=changePage(pageNum)
                             *ngIf="currentPage !== pageNum && pageNum > 0">
-                                {{pageNum}}
+                                {{ pageNum }}
                         </a>
-                        <span *ngIf="currentPage === pageNum">{{pageNum}}</span>
+                        <span *ngIf="currentPage === pageNum">{{ pageNum }}</span>
                         <span *ngIf="pageNum === -1">&hellip;</span>
                 </li>
                 <li [class.disabled]="!nextPage">

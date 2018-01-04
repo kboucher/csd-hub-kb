@@ -16,5 +16,5 @@
         <span [innerHTML]="article.title | preventOrphans"></span>
     </h2>
     <div [innerHTML]="article.body | safe:html"></div>
-    <p><strong>Published/Updated:</strong> {{article.date | date:"MMM d, y"}}</p>
+    <p><strong>Published/Updated:</strong> {{ article.date | date:"MMM d, y" }}</p>
 </div>

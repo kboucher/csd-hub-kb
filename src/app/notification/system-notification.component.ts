@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'system-notification',
+    selector: 'kb-system-notification',
     styleUrls: ['./system-notification.css'],
     templateUrl: './system-notification.html',
 })

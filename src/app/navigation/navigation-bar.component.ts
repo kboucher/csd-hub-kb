@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'navigation-bar',
+    selector: 'kb-navigation-bar',
     styleUrls: ['./navigation-bar.css'],
     templateUrl: './navigation-bar.html',
 })

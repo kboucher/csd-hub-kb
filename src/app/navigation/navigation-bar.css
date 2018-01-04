@@ -3,6 +3,10 @@
     margin-bottom: 15px;
 }
 
+.breadcrumb.kb-navigation-bar > li {
+    max-width: initial;
+}
+
 .breadcrumb.kb-navigation-bar > li + li:before {
     content: '|';
 }

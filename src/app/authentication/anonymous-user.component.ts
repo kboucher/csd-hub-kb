@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'anonymous-user',
+    selector: 'kb-anonymous-user',
     templateUrl: './anonymous-user.html',
 })
 export class AnonymousUserComponent {}

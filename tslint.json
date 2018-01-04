@@ -1,13 +1,32 @@
 {
     "defaultSeverity": "error",
     "extends": [
+        "codelyzer",
         "tslint:recommended"
     ],
     "jsRules": {},
     "rules": {
         "member-access": false,
         "no-reference": false,
-        "quotemark": [true, "single", "avoid-escape"]
+        "quotemark": [true, "single", "avoid-escape"],
+
+        "directive-selector": [true, "attribute", ["dir-prefix1", "dir-prefix2"], "camelCase"],
+        "component-selector": [true, "element", ["kb"], "kebab-case"],
+        "angular-whitespace": [true, "check-interpolation", "check-semicolon"],
+        "use-input-property-decorator": true,
+        "use-output-property-decorator": true,
+        "use-host-property-decorator": true,
+        "no-attribute-parameter-decorator": true,
+        "no-input-rename": true,
+        "no-output-on-prefix": true,
+        "no-output-rename": true,
+        "no-forward-ref": true,
+        "use-life-cycle-interface": true,
+        "use-pipe-transform-interface": true,
+        "component-class-suffix": [true, "Component"],
+        "directive-class-suffix": [true, "Directive"]
     },
-    "rulesDirectory": []
+    "rulesDirectory": [
+        "node_modules/codelyzer"
+    ]
 }

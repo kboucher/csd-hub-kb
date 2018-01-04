@@ -100,6 +100,10 @@ Example: http://localhost:8080/o/kb-rest-api/article/20143/category/22bf2b0d-5aa
 
 ## Development notes
 
+### Linter (Extends codelyzer)
+
+`tslint "app/src/**/*.ts"`
+
 ### GOGO Shell Telnet
 Connect: `telnet localhost 11311`
 Check modules: `lb|grep kb`

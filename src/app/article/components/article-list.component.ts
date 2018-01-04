@@ -7,7 +7,7 @@ import { ArticleService } from '../services/article-service';
 
 @Component({
     providers: [ArticleService],
-    selector: 'article-list',
+    selector: 'kb-article-list',
     styleUrls: ['./article-list.css'],
     templateUrl: './article-list.html',
 })

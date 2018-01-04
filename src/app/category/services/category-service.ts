@@ -10,7 +10,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { Category } from '../models/category';
 
-const apiVersion = 'v1';
+const apiVersion = 'v2';
 
 @Injectable()
 export class CategoryService {
@@ -29,7 +29,9 @@ export class CategoryService {
         return this.http.get(this.categoriesUrl)
             .map((res) => {
                 return this.addStates(res.json());
-            }).toPromise();
+            })
+            .toPromise()
+            .catch(this.handleError);
     }
 
     /*
@@ -94,11 +96,15 @@ export class CategoryService {
     }
 
     // TODO: Refactor this into a service
-    private handleAnonymous() {
+    private handleAnonymous = () => {
         const isSignedIn = Liferay.ThemeDisplay.isSignedIn();
 
         if (!isSignedIn) {
             this.uiRouter.stateService.transitionTo('anonymous-user');
         }
+    }
+
+    private handleError = (err) => {
+        this.uiRouter.stateService.go('error', { error: err }, { location: true });
     }
 }

@@ -6,7 +6,7 @@ import { CategoryService } from '../services/category-service';
 
 @Component({
     providers: [ArticleService],
-    selector: 'category-list',
+    selector: 'kb-category-list',
     styleUrls: ['./category-list.css'],
     templateUrl: './category-list.html',
 })

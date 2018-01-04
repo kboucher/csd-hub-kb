@@ -3,6 +3,7 @@ declare var updateUnreadJewels: any; // global unread jewel update function
 
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { UIRouter } from '@uirouter/angular';
 
 // Import RxJs required methods
 import 'rxjs/add/operator/map';
@@ -19,7 +20,7 @@ export class ArticleService {
     portalUrl: string;
     userId: string;
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private uiRouter: UIRouter) {
         this.groupId = Liferay.ThemeDisplay.getScopeGroupId();
         this.portalUrl = Liferay.ThemeDisplay.getPortalURL();
         this.userId = Liferay.ThemeDisplay.getUserId();
@@ -62,7 +63,9 @@ ${category}/${apiVersion}`;
         return this.http.get(articleListUrl)
             .map((res) => {
                 return res.json();
-            }).toPromise();
+            })
+            .toPromise()
+            .catch(this.handleError);
     }
 
     public getArticleById(articleId: number): Promise<any> {
@@ -85,7 +88,9 @@ ${articleId}/user/${this.userId}/${apiVersion}`;
                 updateUnreadJewels(response[0]);
 
                 return response[1];
-            }).toPromise();
+            })
+            .toPromise()
+            .catch(this.handleError);
     }
 
     public getUnreadArticles(pager?: any): Promise<any> {
@@ -111,7 +116,9 @@ ${this.userId}/${apiVersion}`;
         return this.http.get(articleListUrl)
             .map((res) => {
                 return res.json();
-            }).toPromise();
+            })
+            .toPromise()
+            .catch(this.handleError);
     }
 
     public getUnreadCount(): Promise<any> {
@@ -122,6 +129,12 @@ ${this.groupId}/unreadcount/${this.userId}/${apiVersion}`;
         return this.http.get(unreadCountUrl)
             .map((res) => {
                 return res.json();
-            }).toPromise();
+            })
+            .toPromise()
+            .catch(this.handleError);
+    }
+
+    private handleError = (err) => {
+        this.uiRouter.stateService.transitionTo('error', { err });
     }
 }
