@@ -118,10 +118,7 @@ const unreadArticlesState = {
         }, {
             token: 'categories',
             deps: ['categories', CategoryService],
-            resolveFn: (categories, categoryService) => {
-                // TODO: Could this be done directly on the selected category via transition hook?
-                return categoryService.deselectAll(categories);
-            },
+            resolveFn: (categories) => categories,
         },
     ],
     views: {

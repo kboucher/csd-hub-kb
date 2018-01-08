@@ -22,7 +22,6 @@ export class CategoryListComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.categoryService.deselectAll(this.categories);
         this.pageSize = this.articleSvc.getPageSize();
     }
 

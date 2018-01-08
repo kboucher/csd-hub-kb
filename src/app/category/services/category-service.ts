@@ -10,7 +10,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { Category } from '../models/category';
 
-const apiVersion = 'v2';
+const apiVersion = 'v1';
 
 @Injectable()
 export class CategoryService {
@@ -30,8 +30,7 @@ export class CategoryService {
             .map((res) => {
                 return this.addStates(res.json());
             })
-            .toPromise()
-            .catch(this.handleError);
+            .toPromise();
     }
 
     /*
@@ -56,18 +55,21 @@ export class CategoryService {
 
         @method deselectAll
         @param {Category[]} categories Array of Category objects that need to be deselected.
-     */
-    public deselectAll(categories: Category[]): Category[] {
-        for (const category of categories) {
-            category.state.selected = false;
 
-            if (category.children.length) {
-                this.deselectAll(category.children);
+        TODO: Delete this method when we are sure it's not needed.
+
+        public deselectAll(categories: Category[]): Category[] {
+            for (const category of categories) {
+                category.state.selected = false;
+
+                if (category.children.length) {
+                    this.deselectAll(category.children);
+                }
             }
-        }
 
-        return categories;
-    }
+            return categories;
+        }
+     */
 
     /*
         Recurses over categories and children to add
@@ -95,16 +97,13 @@ export class CategoryService {
         return categories;
     }
 
-    // TODO: Refactor this into a service
+    // TODO: Refactor this into a service?
     private handleAnonymous = () => {
         const isSignedIn = Liferay.ThemeDisplay.isSignedIn();
 
         if (!isSignedIn) {
-            this.uiRouter.stateService.transitionTo('anonymous-user');
+            this.uiRouter.globals.transition.abort();
+            this.uiRouter.stateService.go('anonymous-user');
         }
-    }
-
-    private handleError = (err) => {
-        this.uiRouter.stateService.go('error', { error: err }, { location: true });
     }
 }

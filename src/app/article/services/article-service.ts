@@ -64,8 +64,7 @@ ${category}/${apiVersion}`;
             .map((res) => {
                 return res.json();
             })
-            .toPromise()
-            .catch(this.handleError);
+            .toPromise();
     }
 
     public getArticleById(articleId: number): Promise<any> {
@@ -89,8 +88,7 @@ ${articleId}/user/${this.userId}/${apiVersion}`;
 
                 return response[1];
             })
-            .toPromise()
-            .catch(this.handleError);
+            .toPromise();
     }
 
     public getUnreadArticles(pager?: any): Promise<any> {
@@ -117,8 +115,7 @@ ${this.userId}/${apiVersion}`;
             .map((res) => {
                 return res.json();
             })
-            .toPromise()
-            .catch(this.handleError);
+            .toPromise();
     }
 
     public getUnreadCount(): Promise<any> {
@@ -130,11 +127,6 @@ ${this.groupId}/unreadcount/${this.userId}/${apiVersion}`;
             .map((res) => {
                 return res.json();
             })
-            .toPromise()
-            .catch(this.handleError);
-    }
-
-    private handleError = (err) => {
-        this.uiRouter.stateService.transitionTo('error', { err });
+            .toPromise();
     }
 }

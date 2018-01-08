@@ -23,7 +23,7 @@
                         </h3>
                     </div>
                     <kb-paginator
-                            *ngIf="showPager && !isArticleState"
+                            *ngIf="!isArticleState"
                             [currentPage]="page"
                             [displayMax]="7"
                             [pages]="pages"
@@ -48,6 +48,16 @@
                             </div>
                         </div>
                     </div>
+                    <kb-paginator
+                            *ngIf="!isArticleState && pageSize > 10 && pages.length > 1"
+                            [currentPage]="page"
+                            [displayMax]="7"
+                            [pages]="pages"
+                            [pageArticleCount]="articles.length"
+                            [pageSize]="pageSize"
+                            [totalArticleCount]="total"
+                            (goToPage)="goToPage($event)">
+                    </kb-paginator>
                 </div>
 
                 <kb-system-notification

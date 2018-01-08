@@ -24,7 +24,6 @@ export class ArticleListComponent implements OnInit {
     emptyMssgIcon: string;
     page: number;
     pages: number[] = [];
-    showPager: boolean;
     total: number;
 
     constructor(
@@ -46,6 +45,12 @@ export class ArticleListComponent implements OnInit {
             this.isArticleState = false;
         });
 
+        this.uiRouter.transitionService.onExit({ exiting: 'categories.articles' }, (trans) => {
+            if (this && this.selectedCategory) {
+                this.selectedCategory.state.selected = false;
+            }
+        });
+
         this.articleService.getUnreadCount().then((unread) => {
             this.unreadCount = unread.unreadCount;
         });
@@ -54,7 +59,6 @@ export class ArticleListComponent implements OnInit {
         this.page = this.articlesResponse.page;
         this.pageSize = this.articlesResponse.size;
         this.total = this.articlesResponse.total;
-        this.showPager = this.total > this.pageSize;
 
         // Handle category vs. unread-articles lists
         if (this.selectedCategory) {
