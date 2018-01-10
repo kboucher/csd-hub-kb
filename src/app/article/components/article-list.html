@@ -23,9 +23,9 @@
                         </h3>
                     </div>
                     <kb-paginator
-                            *ngIf="!isArticleState"
                             [currentPage]="page"
                             [displayMax]="7"
+                            [isCompactView]="isArticleState"
                             [pages]="pages"
                             [pageArticleCount]="articles.length"
                             [pageSize]="pageSize"
@@ -49,9 +49,10 @@
                         </div>
                     </div>
                     <kb-paginator
-                            *ngIf="!isArticleState && pageSize > 10 && pages.length > 1"
+                            *ngIf="pageSize > 10 && pages.length > 1"
                             [currentPage]="page"
                             [displayMax]="7"
+                            [isCompactView]="isArticleState"
                             [pages]="pages"
                             [pageArticleCount]="articles.length"
                             [pageSize]="pageSize"

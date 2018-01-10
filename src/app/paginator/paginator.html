@@ -1,6 +1,6 @@
 <div class="row paginator">
     <div class="hidden-xs col-sm-6 small page-info">
-        <span>
+        <span *ngIf="!isCompactView">
             Showing
             <strong><i>{{ fromItem }}&ndash;{{ toItem }}</i></strong>
             of
@@ -43,6 +43,7 @@
                 </li>
                 <li [class.active]="currentPage === pageNum"
                     [class.disabled]="pageNum === -1"
+                    [class.hide]="isCompactView && !(currentPage === pageNum)"
                     *ngFor="let pageNum of displayPages">
                         <a href="#"
                             (click)=changePage(pageNum)

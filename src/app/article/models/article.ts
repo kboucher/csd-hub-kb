@@ -4,5 +4,6 @@ export class Article {
         public id: number,
         public date: string,
         public body?: string,
+        public error?: any,
     ) {}
 }

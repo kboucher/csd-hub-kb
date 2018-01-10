@@ -6,6 +6,7 @@ import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { UIRouter } from '@uirouter/angular';
 
 // Import RxJs required methods
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
@@ -87,6 +88,13 @@ ${articleId}/user/${this.userId}/${apiVersion}`;
                 updateUnreadJewels(response[0]);
 
                 return response[1];
+            })
+            /*
+                We want to display article errors in the context of the
+                article state and template. So catch and return as "article".
+            */
+            .catch((err) => {
+                return [{error: err}];
             })
             .toPromise();
     }

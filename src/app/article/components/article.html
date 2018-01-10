@@ -12,9 +12,19 @@
         *ngIf="!category">
             <i class="icon icon-remove"></i>
     </a>
-    <h2>
-        <span [innerHTML]="article.title | preventOrphans"></span>
-    </h2>
-    <div [innerHTML]="article.body | safe:html"></div>
-    <p><strong>Published/Updated:</strong> {{ article.date | date:"MMM d, y" }}</p>
+
+    <ng-container *ngIf="!isError">
+        <h2>
+            <span [innerHTML]="article.title | preventOrphans"></span>
+        </h2>
+        <div [innerHTML]="article.body | safe:html"></div>
+        <p><strong>Published/Updated:</strong> {{ article.date | date:"MMM d, y" }}</p>
+    </ng-container>
 </div>
+
+<kb-system-notification
+    *ngIf="isError"
+    icon="icon-warning-sign"
+    notificationClass="article-error"
+    [message]="errorMessage">
+</kb-system-notification>

@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 export class PaginatorComponent implements OnChanges {
     @Input() currentPage: number;
     @Input() displayMax: number = 3;
+    @Input() isCompactView: boolean = false;
     @Input() pages: number[];
     @Input() pageArticleCount: number;
     @Input() pageSize: number;
