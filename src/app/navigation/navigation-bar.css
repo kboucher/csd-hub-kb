@@ -4,11 +4,18 @@
 }
 
 .breadcrumb.kb-navigation-bar > li {
+    letter-spacing: -.4px;
     max-width: initial;
 }
 
 .breadcrumb.kb-navigation-bar > li + li:before {
     content: '|';
+}
+
+.breadcrumb.kb-navigation-bar .active {
+    color: inherit !important;
+    cursor: default !important;
+    text-decoration: none !important;
 }
 
 .breadcrumb .jewel-count {

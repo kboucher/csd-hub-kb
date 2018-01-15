@@ -5,5 +5,6 @@ export class Article {
         public date: string,
         public body?: string,
         public error?: any,
+        public read?: boolean,
     ) {}
 }

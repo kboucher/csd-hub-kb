@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { ArticleService } from '../../article/services/article-service';
 import { Category } from '../models/category';
-import { CategoryService } from '../services/category-service';
 
 @Component({
     providers: [ArticleService],
@@ -15,14 +14,16 @@ export class CategoryListComponent implements OnInit {
 
     pageSize: number;
     selectedCategory: Category;
+    unreadCount: number = 0;
 
-    constructor(
-        private articleSvc: ArticleService,
-        private categoryService: CategoryService,
-    ) {}
+    constructor(private articleService: ArticleService) {}
 
     ngOnInit() {
-        this.pageSize = this.articleSvc.getPageSize();
+        this.pageSize = this.articleService.getPageSize();
+
+        this.articleService.getUnreadCount().then((unread) => {
+            this.unreadCount = unread.unreadCount;
+        });
     }
 
     // Handles category card click

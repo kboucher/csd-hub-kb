@@ -2,6 +2,14 @@
 
 This portlet was generated using Xtivia's Jetray portlet generator and written in Angular 4. It has additional dependencies on Liferay's AUI framework and jQuery.
 
+## Build && Deploy
+
+From project root:
+
+1. `npm install`
+2. `gulp build`
+3. `gulp deploy`
+
 ## Third-party Components
 
 ### jsTree jQuery Plugin

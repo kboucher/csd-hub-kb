@@ -21,4 +21,5 @@
 
 .system-notification p {
     font-style: italic;
+    letter-spacing: -.8px;
 }

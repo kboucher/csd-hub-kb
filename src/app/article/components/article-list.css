@@ -7,10 +7,6 @@
     margin-right: -15px;
 }
 
-.categories-navigation > div {
-    transition: width .25s;
-}
-
 .category-tree {
     border-right: solid #eee 1px;
     overflow-x: auto;
@@ -29,7 +25,10 @@
 }
 
 .articles-list-container h3 {
+    font-weight: bold;
+    letter-spacing: -1.8px;
     margin: 20px 0 15px;
+    transition: font-size .25s;
 }
 
 .articles-list-container.compact {
@@ -38,10 +37,15 @@
 
 .articles-list-container.compact h3 {
     font-size: 1rem;
-    font-weight: bold;
+    letter-spacing: -.8px;
     margin: 15px 7.5px;
 }
 
 .article-container {
     border-left: solid #eee 1px;
+}
+
+.articles-list .unread-article {
+    color: #111;
+    font-weight: bold;
 }
