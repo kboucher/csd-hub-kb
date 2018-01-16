@@ -6,7 +6,7 @@ import { Category } from '../models/category';
 @Component({
     providers: [ArticleService],
     selector: 'kb-category-list',
-    styleUrls: ['./category-list.css'],
+    styleUrls: ['./category-list.scss'],
     templateUrl: './category-list.html',
 })
 export class CategoryListComponent implements OnInit {

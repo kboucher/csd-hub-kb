@@ -28,11 +28,12 @@ module.exports = {
   ],
   resolve: {
     extensions: ['*','.ts', '.js']
-  }, 
+  },
   module: {
     loaders: [
       {test: /\.ts$/, loader: 'ts-loader'},
       {test: /\.(html|css)$/, loader: 'raw-loader' },
+      {test: /\.scss$/, exclude: /node_modules/, loaders: ['raw-loader', 'sass-loader']}
     ],
     noParse: /path.join(__dirname,'node_modules', 'angular2', 'bundles')/
   },

@@ -5,7 +5,7 @@ import { Article } from '../models/article';
 
 @Component({
     selector: 'kb-article',
-    styleUrls: ['./article.css'],
+    styleUrls: ['./article.scss'],
     templateUrl: './article.html',
 })
 export class ArticleComponent implements OnInit {

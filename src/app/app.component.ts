@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'kb-app',
-    styleUrls: ['./app.css'],
+    styleUrls: ['./app.scss'],
     templateUrl: './app.html',
 })
 export class AppComponent {}

@@ -8,7 +8,7 @@ import { ArticleService } from '../services/article-service';
 @Component({
     providers: [ArticleService],
     selector: 'kb-article-list',
-    styleUrls: ['./article-list.css'],
+    styleUrls: ['./article-list.scss'],
     templateUrl: './article-list.html',
 })
 export class ArticleListComponent implements OnInit {

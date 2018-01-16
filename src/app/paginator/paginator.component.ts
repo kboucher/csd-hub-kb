@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 
 @Component({
     selector: 'kb-paginator',
-    styleUrls: ['./paginator.css'],
+    styleUrls: ['./paginator.scss'],
     templateUrl: './paginator.html',
 })
 export class PaginatorComponent implements OnChanges {

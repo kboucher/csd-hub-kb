@@ -26,13 +26,14 @@ module.exports = {
  ],
   resolve: {
     extensions: ['*','.ts', '.js']
-  }, 
+  },
   module: {
     loaders: [
       // process Angular templates to inline HTML/CSS then invoke Typescript
       {test: /\.ts$/, loader: 'ts-loader!angular2-template-loader'},
       // used to load Angular HTML/CSS files for templates
       {test: /\.(html|css)$/, loader: 'raw-loader' },
+      {test: /\.scss$/, exclude: /node_modules/, loaders: ['raw-loader', 'sass-loader']}
     ],
     noParse: /path.join(__dirname,'node_modules', 'angular2', 'bundles')/
   },

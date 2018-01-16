@@ -8,7 +8,7 @@ const treeSelector = '#category-tree';
 
 @Component({
     selector: 'kb-category-tree-view',
-    styleUrls: ['./tree-view.css'],
+    styleUrls: ['./tree-view.scss'],
     templateUrl: './tree-view.html',
     encapsulation: ViewEncapsulation.None,
 })
