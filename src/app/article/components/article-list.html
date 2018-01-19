@@ -58,8 +58,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- *ngIf="pageSize > 10 && pages.length > 1" -->
                     <kb-paginator
+                            *ngIf="pageSize > 10 && pages.length > 1"
                             [currentPage]="page"
                             [displayMax]="pagerDisplayMax"
                             [isCompactView]="isArticleState"
