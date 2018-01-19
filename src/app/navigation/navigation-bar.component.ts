@@ -7,5 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class NavigationBarComponent {
     @Input() pageSize: number;
+    @Input() sortCriterion: number;
+    @Input() sortOrder: number;
     @Input() unreadCount: number;
 }

@@ -1,37 +1,7 @@
 <div class="row paginator">
-    <div class="hidden-xs col-sm-6 small page-info">
-        <span *ngIf="!isCompactView">
-            Showing
-            <strong><i>{{ fromItem }}&ndash;{{ toItem }}</i></strong>
-            of
-            <strong><i>{{ totalArticleCount }}</i></strong>
-        </span>
-        &nbsp;
-        <div class="btn-group">
-            <button type="button"
-                class="btn btn-default btn-sm dropdown-toggle"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false">
-                    {{ pageSize }} <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li *ngFor="let option of pageSizeOptions">
-                    <a href="#" [class.selected]="option === pageSize" (click)="changePageSize(option)">{{ option }}</a>
-                </li>
-                <!--
-                    TODO: Uncomment this after wiring up "all records" state
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#" (click)="getAllRecords()">All</a></li>
-                -->
-            </ul>
-        </div>
-        &thinsp;
-        <span>per page</span>
-    </div>
-    <div class="col-xs-12 col-sm-6 text-xs-left text-sm-right" *ngIf="pages.length > 1">
+    <div class="col-xs-12" [class.col-md-6]="!isCompactView" [class.col-lg-8]="!isCompactView">
         <nav aria-label="Page navigation">
-            <ul class="pagination">
+            <ul class="pagination" *ngIf="pages.length > 1">
                 <li [class.disabled]="!prevPage">
                     <a href="#"
                         aria-label="Previous"
@@ -63,6 +33,84 @@
                     <span aria-hidden="true" *ngIf="!nextPage">&raquo;</span>
                 </li>
             </ul>
+            <ng-container *ngIf="!isCompactView">
+                <span class="text-muted hidden-xs hidden-sm hidden-md">
+                    Showing
+                    <strong><i>{{ fromItem }}&ndash;{{ toItem }}</i></strong>
+                    of
+                    <strong><i>{{ totalArticleCount }}</i></strong>
+                    &nbsp;&nbsp;
+                </span>
+                <div class="btn-group hidden-xs hidden-sm hidden-md">
+                    <button type="button"
+                        class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                            {{ pageSize }} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li *ngFor="let option of pageSizeOptions">
+                            <a href="#" [class.selected]="option === pageSize" (click)="changePageSize(option)">{{ option }}</a>
+                        </li>
+                        <!--
+                            TODO: Uncomment this after wiring up "all records" state
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" (click)="getAllRecords()">All</a></li>
+                        -->
+                    </ul>
+                </div>
+                <span class="text-muted hidden-xs hidden-sm hidden-md">&nbsp;per page</span>
+            </ng-container>
         </nav>
+    </div>
+    <div class="hidden-xs hidden-sm col-md-6 col-lg-4" *ngIf="!isCompactView">
+        <div class="sort-tools" *ngIf="sortOptions && sortOptions.length">
+            <span class="text-muted">Sort by:&nbsp;&nbsp;</span>
+            <div class="btn-toolbar sort-toolbar" role="toolbar" aria-label="List sorting">
+                <div class="btn-group" role="group" aria-label="Sort by">
+                    <button
+                        type="button"
+                        class="btn btn-default"
+                        [class.active]="sortCriterion === sorter.id"
+                        (click)="updateSort({ sortCriterion: sorter.id, sortOrder: sortOrder })"
+                        *ngFor="let sorter of sortOptions">
+                            {{ sorter.name }}
+                    </button>
+                    <!-- <button
+                        type="button"
+                        class="btn btn-default"
+                        [class.active]="sortCriterion === 'date'"
+                        (click)="updateSort({ sortCriterion: 'date', sortOrder: sortOrder })">
+                            Date
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-default"
+                        [class.active]="sortCriterion === 'title'"
+                        (click)="updateSort({ sortCriterion: 'title', sortOrder: sortOrder })">
+                            Title
+                    </button> -->
+                </div>
+                <div class="btn-group" role="group" aria-label="Sort direction">
+                    <button
+                        aria-label="Ascending"
+                        type="button"
+                        class="btn btn-default"
+                        [class.active]="sortOrder === 'asc'"
+                        (click)="updateSort({ sortCriterion: sortCriterion, sortOrder: 'asc' })">
+                            <i class="icon icon-chevron-up"></i>
+                    </button>
+                    <button
+                        aria-label="Descending"
+                        type="button"
+                        class="btn btn-default"
+                        [class.active]="sortOrder === 'desc'"
+                        (click)="updateSort({ sortCriterion: sortCriterion, sortOrder: 'desc' })">
+                            <i class="icon icon-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

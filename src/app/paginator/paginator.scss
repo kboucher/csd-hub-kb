@@ -1,11 +1,21 @@
 .paginator {
     margin-bottom: 15px;
 
-    .small {
-        padding-top: .3rem;
+    nav,
+    .sort-tools {
+        display: flex;
+        align-items: center;
     }
 
     .pagination {
-        margin: 0;
+        margin: 0 1rem 0 0;
+    }
+
+    .sort-tools {
+        justify-content: flex-end;
+    }
+
+    .sort-toolbar {
+        display: inline-block;
     }
 }

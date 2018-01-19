@@ -1,13 +1,13 @@
 <div class="article" *ngIf="article">
     <a class="btn btn-default back-btn"
         uiSref="categories.articles"
-        [uiParams]="{ categoryId: category.id }"
+        [uiParams]="{ categoryId: category.id, page: pageNum, size: pageSize }"
         [uiOptions]="{ location: true }"
         *ngIf="category">
             <i class="icon icon-remove"></i>
     </a>
     <a class="btn btn-default back-btn"
-        uiSref="categories.unread-articles"
+        uiSref="categories.unread"
         [uiOptions]="{ location: true, reload: true }"
         *ngIf="!category">
             <i class="icon icon-remove"></i>
@@ -19,6 +19,18 @@
         </h2>
         <div [innerHTML]="article.body | safe:html"></div>
         <p><strong>Published/Updated:</strong> {{ article.date | date:"MMM d, y" }}</p>
+        <div>
+            <strong>Categories:</strong>
+            <ul class="list-inline">
+                <li *ngFor="let category of article.categories">
+                    <a uiSref="categories.articles"
+                        [uiParams]="{ categoryId: category.categoryId, page: 1, size: pageSize }"
+                        [uiOptions]="{ location: true }">
+                            {{ category.categoryName }}
+                    </a>
+                </li>
+            </ul>
+        </div>
     </ng-container>
 </div>
 

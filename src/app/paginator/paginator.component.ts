@@ -12,7 +12,12 @@ export class PaginatorComponent implements OnChanges {
     @Input() pages: number[];
     @Input() pageArticleCount: number;
     @Input() pageSize: number;
+    @Input() sortCriterion?: string;
+    @Input() sortOptions?: any[];
+    @Input() sortOrder?: string;
     @Input() totalArticleCount: number;
+
+    @Output() changeSort = new EventEmitter();
     @Output() goToPage = new EventEmitter();
 
     displayPages: number[];
@@ -40,19 +45,23 @@ export class PaginatorComponent implements OnChanges {
         }
     }
 
-    changePage(pageNum: number) {
+    public changePage(pageNum: number) {
         event.preventDefault();
 
         this.goToPage.emit({pageNum, pageSize: this.pageSize});
     }
 
-    changePageSize(pageSize: number) {
+    public changePageSize(pageSize: number) {
         event.preventDefault();
 
         this.goToPage.emit({pageNum: 1, pageSize});
     }
 
-    setDisplayPages() {
+    public updateSort(options: any) {
+        this.changeSort.emit(options);
+    }
+
+    private setDisplayPages() {
         const pages = [];
         const half = Math.floor(this.displayMax / 2);
         let start = this.currentPage - half + 1 - this.displayMax % 2;

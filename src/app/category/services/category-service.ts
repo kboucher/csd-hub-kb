@@ -3,6 +3,7 @@ declare var Liferay: any;
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { UIRouter } from '@uirouter/angular';
+import * as config from '../../app.config';
 
 // Import RxJs required methods
 import 'rxjs/add/operator/map';
@@ -10,11 +11,11 @@ import 'rxjs/add/operator/toPromise';
 
 import { Category } from '../models/category';
 
-const apiVersion = 'v1';
+const apiVersion = config.getApiVersion();
 
 @Injectable()
 export class CategoryService {
-    categoriesUrl: string;
+    private categoriesUrl: string;
 
     constructor(private http: Http, private uiRouter: UIRouter) {
         const portalUrl = Liferay.ThemeDisplay.getPortalURL();
@@ -50,28 +51,6 @@ export class CategoryService {
     }
 
     /*
-        Recurses over categories and children to deselect
-        and close all jsTree state objects.
-
-        @method deselectAll
-        @param {Category[]} categories Array of Category objects that need to be deselected.
-
-        TODO: Delete this method when we are sure it's not needed.
-
-        public deselectAll(categories: Category[]): Category[] {
-            for (const category of categories) {
-                category.state.selected = false;
-
-                if (category.children.length) {
-                    this.deselectAll(category.children);
-                }
-            }
-
-            return categories;
-        }
-     */
-
-    /*
         Recurses over categories and children to add
         jsTree state objects.
 
@@ -97,7 +76,7 @@ export class CategoryService {
         return categories;
     }
 
-    // TODO: Refactor this into a service?
+    // TODO: Refactor this into app service?
     private handleAnonymous = () => {
         const isSignedIn = Liferay.ThemeDisplay.isSignedIn();
 

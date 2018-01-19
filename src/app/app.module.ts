@@ -6,6 +6,7 @@ import { Transition, UIRouterModule } from '@uirouter/angular';
 import { uiRouterConfigFn } from './app.routerconfig';
 
 // Components
+import { AppService } from './app-service';
 import { AppComponent } from './app.component';
 import { ArticleListComponent } from './article/components/article-list.component';
 import { ArticleComponent } from './article/components/article.component';
@@ -40,10 +41,8 @@ const errorState = {
         {
             token: 'error',
             deps: [Transition],
-            resolveFn: (trans) => {
-                // TODO: Why aren't ˋparamsˋ accessible via ˋtrans.params()ˋ?
-                return trans.targetState()._params.error;
-            },
+            // TODO: Why aren't ˋparamsˋ accessible via ˋtrans.params()ˋ?
+            resolveFn: (trans) => trans.targetState()._params.error,
         },
     ],
     views: {
@@ -68,7 +67,7 @@ const categoriesState = {
 
 const articlesState = {
     name: 'categories.articles',
-    url: '/:categoryId/articles/page/:page/size/:size',
+    url: '/:categoryId/articles/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
     resolve: [
         {
             token: 'articlesResponse',
@@ -77,26 +76,39 @@ const articlesState = {
                 return articleService.getArticlesByCategory(trans.params().categoryId, {
                     page: trans.params().page,
                     size: trans.params().size,
+                    sortCriterion: trans.params().sortCriterion,
+                    sortOrder: trans.params().sortOrder,
                 });
             },
         }, {
+            token: 'articleId',
+            deps: [Transition],
+            resolveFn: (trans) => trans.params().articleId,
+        }, {
             token: 'categories',
             deps: ['categories'],
-            resolveFn: (categories) => {
-                return categories;
-            },
+            resolveFn: (categories) => categories,
+        }, {
+            token: 'pageNum',
+            deps: [Transition],
+            resolveFn: (trans) => trans.params().page,
         }, {
             token: 'pageSize',
             deps: [Transition],
-            resolveFn: (trans) => {
-                return trans.params().size;
-            },
+            resolveFn: (trans) => trans.params().size,
+        }, {
+            token: 'sortCriterion',
+            deps: [Transition],
+            resolveFn: (trans) => trans.params().sortCriterion,
+        }, {
+            token: 'sortOrder',
+            deps: [Transition],
+            resolveFn: (trans) => trans.params().sortOrder,
         }, {
             token: 'selectedCategory',
             deps: [Transition, CategoryService, 'categories'],
-            resolveFn: (trans, categoryService, categories) => {
-                return categoryService.findById(categories, trans.params().categoryId);
-            },
+            resolveFn: (trans, categoryService, categories) =>
+                    categoryService.findById(categories, trans.params().categoryId),
         },
     ],
     views: {
@@ -105,8 +117,8 @@ const articlesState = {
 };
 
 const unreadArticlesState = {
-    name: 'categories.unread-articles',
-    url: '/unread-articles/page/:page/size/:size',
+    name: 'categories.unread',
+    url: '/unread/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
     resolve: [
         {
             token: 'articlesResponse',
@@ -114,11 +126,33 @@ const unreadArticlesState = {
             resolveFn: (trans, articleService) => articleService.getUnreadArticles({
                 page: trans.params().page,
                 size: trans.params().size,
+                sortCriterion: trans.params().sortCriterion,
+                sortOrder: trans.params().sortOrder,
             }),
         }, {
+            token: 'articleId',
+            deps: [Transition],
+            resolveFn: (trans) => trans.params().articleId,
+        }, {
             token: 'categories',
-            deps: ['categories', CategoryService],
+            deps: ['categories'],
             resolveFn: (categories) => categories,
+        }, {
+            token: 'pageNum',
+            deps: [Transition],
+            resolveFn: (trans) => trans.params().page,
+        }, {
+            token: 'pageSize',
+            deps: [Transition],
+            resolveFn: (trans) => trans.params().size,
+        }, {
+            token: 'sortCriterion',
+            deps: [Transition],
+            resolveFn: (trans) => trans.params().sortCriterion,
+        }, {
+            token: 'sortOrder',
+            deps: [Transition],
+            resolveFn: (trans) => trans.params().sortOrder,
         },
     ],
     views: {
@@ -133,13 +167,14 @@ const articleState = {
         {
             token: 'article',
             deps: [Transition, ArticleService],
-            resolveFn: (trans, articleService) => articleService.getArticleById(trans.params().articleId),
+            resolveFn: (trans, articleService) => articleService.getArticleById(trans.params().articleId, {
+                page: trans.params().page,
+                size: trans.params().size,
+            }),
         }, {
             token: 'category',
             deps: ['selectedCategory'],
-            resolveFn: (selectedCategory) => {
-                return selectedCategory;
-            },
+            resolveFn: (selectedCategory) => selectedCategory,
         },
     ],
     views: {
@@ -148,8 +183,8 @@ const articleState = {
 };
 
 const unreadArticleState = {
-    name: 'categories.unread-articles.article',
-    url: '/unread-articles/:articleId',
+    name: 'categories.unread.article',
+    url: '/unread/:articleId',
     resolve: [
         {
             token: 'article',
@@ -195,7 +230,7 @@ const unreadArticleState = {
         SystemNotificationComponent,
         TreeViewComponent,
     ],
-    providers: [ArticleService, CategoryService],
+    providers: [AppService, ArticleService, CategoryService],
     bootstrap: [AppComponent],
 })
 

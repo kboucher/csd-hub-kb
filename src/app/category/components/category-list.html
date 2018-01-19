@@ -1,11 +1,18 @@
-<kb-navigation-bar [unreadCount]="unreadCount" [pageSize]="pageSize" *ngIf="unreadCount > 0"></kb-navigation-bar>
+<kb-navigation-bar
+    [unreadCount]="unreadCount"
+    [pageSize]="pageSize"
+    [sortCriterion]="sortCriterion"
+    [sortOrder]="sortOrder"
+    *ngIf="unreadCount > 0">
+</kb-navigation-bar>
+
 <!-- Category cards -->
 <div class="category-list card-group row">
     <div class="card col-xs-12 col-sm-6 col-md-3 col-lg-2" *ngFor="let category of categories">
         <a class="card-block"
             (click)="select(category)"
             uiSref="categories.articles"
-            [uiParams]="{ categoryId: category.id, page: 1, size: pageSize }"
+            [uiParams]="{ categoryId: category.id, page: 1, size: pageSize, sortCriterion: sortCriterion, sortOrder: sortOrder }"
             [uiOptions]="{ location: true }"
             title="{{ category.text }}">
                 <img src="{{ category.image }}" class="icon">

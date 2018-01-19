@@ -2,7 +2,7 @@
 
 This portlet was generated using Xtivia's Jetray portlet generator and written in Angular 4. It has additional dependencies on Liferay's AUI framework and jQuery.
 
-## Build && Deploy
+## Build & Deploy
 
 From project root:
 
@@ -44,75 +44,44 @@ https://www.jstree.com/
     }]
 ```
 
-## Articles List
-
-### JSON Structure
-```
-[{
-	"title": "First Article Title",
-	"id": 1,
-	"body": "BODY TEXT HERE", // can be empty for list call
-	"date": "Thu Nov 16 2017"
-}, {
-	"title": "Second Article Title",
-	"id": 2,
-	"body": "BODY TEXT HERE",
-	"date": "Thu Nov 16 2017"
-}, {
-	"title": "Third Article Title",
-	"id": 3,
-	"body": "BODY TEXT HERE",
-	"date": "Thu Nov 16 2017"
-}, {
-	"title": "Fourth Article Title",
-	"id": 4,
-	"body": "BODY TEXT HERE",
-	"date": "Thu Nov 16 2017"
-}, {
-	"title": "Fifth Article Title",
-	"id": 5,
-	"body": "BODY TEXT HERE",
-	"date": "Thu Nov 16 2017"
-}]
-```
-
 ## Web Service Dependencies
-
-### Get Article and Unread Count
-
-http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/content/{articleId}/user/{userId}/v1
-Example: http://localhost:8080/o/kb-rest-api/article/20143/content/49388/user/50207/v1
-
-### Get Unread Count
-
-http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadcount/{userId}/v1
-Example: http://localhost:8080/o/kb-rest-api/article/0/unreadcount/20120/v1
-
-### Get Unread Article list
-
-http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/{userId}/page/{page}/size/{size}/v1
-http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/{userId}/v1
-
-Example: http://localhost:8080/o/kb-rest-api/article/20143/unreadarticle/50201/v1
-Example: http://localhost:8080/o/kb-rest-api/article/20143/unreadarticle/50201/page/1/size/10/v1
 
 ### Get the Category Tree
 
-http://{hostname}:{port}/o/kb-rest-api/category/{groupId}/tree/v1/
-Example: http://localhost:8080/o/kb-rest-api/category/20143/tree/v1/
+`http://{hostname}:{port}/o/kb-rest-api/category/{groupId}/tree/v1/`
+
+### Get Article and Unread Count
+
+`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/content/{articleId}/v1`
+
+### Get Unread Count
+
+`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadcount/v1`
+
+### Get Unread Article List
+
+#### With Pagination
+`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/page/{page}/size/{size}/sort/{column}/{asc}/v1`
+
+#### Without Pagination
+`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/sort/{column}/{asc}/v1`
 
 ### Get Article List for a Category
 
-http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryUuid}/page/{page}/size/{size}/v1
-Example: http://localhost:8080/o/kb-rest-api/article/20143/category/22bf2b0d-5aa1-8680-ca13-e5542f25e98f/page/1/size/10/v1
+#### With Pagination
+`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/page/{page}/size/{size}/sort/{column}/{asc}/v1`
 
-## Development notes
+#### Without Pagination
+`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/sort/{column}/{asc}/v1`
+
+## Development Notes
 
 ### Linter (Extends codelyzer)
 
 `tslint "app/src/**/*.ts"`
-
-### GOGO Shell Telnet
-Connect: `telnet localhost 11311`
-Check modules: `lb|grep kb`
-Uninstall modules: `uninstall [id]`
+<!---
+    ### GOGO Shell Telnet
+    Connect: `telnet localhost 11311`
+    Check modules: `lb|grep kb`
+    Uninstall modules: `uninstall [id]`
+-->

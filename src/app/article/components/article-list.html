@@ -1,4 +1,9 @@
-<kb-navigation-bar [unreadCount]="unreadCount" [pageSize]="pageSize"></kb-navigation-bar>
+<kb-navigation-bar
+    [unreadCount]="unreadCount"
+    [pageSize]="pageSize"
+    [sortCriterion]="sortCriterion"
+    [sortOrder]="sortOrder">
+</kb-navigation-bar>
 <div class="categories-navigation row">
     <div class="xs-12 col-sm-3 col-lg-2 category-tree">
         <kb-category-tree-view
@@ -24,12 +29,16 @@
                     </div>
                     <kb-paginator
                             [currentPage]="page"
-                            [displayMax]="7"
+                            [displayMax]="pagerDisplayMax"
                             [isCompactView]="isArticleState"
                             [pages]="pages"
                             [pageArticleCount]="articles.length"
                             [pageSize]="pageSize"
+                            [sortCriterion]="sortCriterion"
+                            [sortOptions]="sortOptions"
+                            [sortOrder]="sortOrder"
                             [totalArticleCount]="total"
+                            (changeSort)="changeSort($event)"
                             (goToPage)="goToPage($event)">
                     </kb-paginator>
                     <div class="row">
@@ -49,15 +58,16 @@
                             </div>
                         </div>
                     </div>
+                    <!-- *ngIf="pageSize > 10 && pages.length > 1" -->
                     <kb-paginator
-                            *ngIf="pageSize > 10 && pages.length > 1"
                             [currentPage]="page"
-                            [displayMax]="7"
+                            [displayMax]="pagerDisplayMax"
                             [isCompactView]="isArticleState"
-                            [pages]="pages"
                             [pageArticleCount]="articles.length"
+                            [pages]="pages"
                             [pageSize]="pageSize"
                             [totalArticleCount]="total"
+                            (changeSort)="changeSort($event)"
                             (goToPage)="goToPage($event)">
                     </kb-paginator>
                 </div>

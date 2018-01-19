@@ -3,8 +3,8 @@
         <li><a uiSref="categories" uiSrefActiveEq="active">Categories</a></li>
 
         <li class="unread-articles" *ngIf="unreadCount > 0">
-            <a uiSref="categories.unread-articles"
-                [uiParams]="{ page: 1, size: pageSize }"
+            <a uiSref="categories.unread"
+                [uiParams]="{ page: 1, size: pageSize, sortCriterion: sortCriterion, sortOrder: sortOrder }"
                 [uiOptions]="{ location: true }"
                 class="jewel-link">
                     Unread Articles
