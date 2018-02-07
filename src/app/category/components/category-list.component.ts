@@ -1,5 +1,6 @@
+declare var $: any;
+
 import { Component, Input, OnInit } from '@angular/core';
-import * as config from '../../app.config';
 
 import { AppService } from '../../app-service';
 import { ArticleService } from '../../article/services/article-service';
@@ -15,7 +16,6 @@ export class CategoryListComponent implements OnInit {
     @Input() categories: Category[];
 
     public pageSize: number;
-    public selectedCategory: Category;
     public sortCriterion: string;
     public sortOrder: string;
     public unreadCount: number = 0;
@@ -35,11 +35,20 @@ export class CategoryListComponent implements OnInit {
         });
     }
 
-    // Handles category card click
-    select(category: Category) {
-        this.selectedCategory = category;
+    /*
+        Handles category card click. Sets initial jsTree state and
+        scrolls page to top of the Knowledge Base portlet.
 
+        @method select
+        @param {Category} category CSD Hub Knowledge Base category object
+        @public
+     */
+    select(category: Category) {
         category.state.opened = true;
         category.state.selected = true;
+
+        $('html, body').animate({
+            scrollTop: $('#portlet_bcbsal_csd_knowledgeBase').offset().top,
+        }, 500);
     }
 }

@@ -3,25 +3,28 @@ declare var Liferay: any;
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { UIRouter } from '@uirouter/angular';
-import * as config from '../../app.config';
 
 // Import RxJs required methods
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
+import { AppConfig } from '../../../config/app.config';
 import { Category } from '../models/category';
-
-const apiVersion = config.getApiVersion();
 
 @Injectable()
 export class CategoryService {
+    private apiVersion: string;
     private categoriesUrl: string;
 
-    constructor(private http: Http, private uiRouter: UIRouter) {
-        const portalUrl = Liferay.ThemeDisplay.getPortalURL();
-        const groupId = Liferay.ThemeDisplay.getScopeGroupId();
+    constructor(
+        private appConfig: AppConfig,
+        private http: Http,
+        private uiRouter: UIRouter) {
+            const portalUrl = Liferay.ThemeDisplay.getPortalURL();
+            const groupId = Liferay.ThemeDisplay.getScopeGroupId();
 
-        this.categoriesUrl = `${portalUrl}/o/kb-rest-api/category/${groupId}/tree/${apiVersion}`;
+            this.apiVersion = appConfig.getEntryByKey('API_VERSION');
+            this.categoriesUrl = `${portalUrl}/o/kb-rest-api/category/${groupId}/tree/${this.apiVersion}`;
     }
 
     public getCategories(): Promise<any> {

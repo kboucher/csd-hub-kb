@@ -4,29 +4,30 @@ declare var KBUnread: any; // global unread link functions
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { UIRouter } from '@uirouter/angular';
-import * as config from '../../app.config';
 
 // Import RxJs required methods
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
+import { AppConfig } from '../../../config/app.config';
 import { AppService } from '../../app-service';
 import { Category } from '../../category/models/category';
 import { Article } from '../models/article';
 
-const apiVersion = config.getApiVersion();
-
 @Injectable()
 export class ArticleService {
+    private apiVersion: string;
     private groupId: string;
     private portalUrl: string;
 
     constructor(
+        private appConfig: AppConfig,
         private appService: AppService,
         private http: Http,
         private uiRouter: UIRouter,
     ) {
+        this.apiVersion = appConfig.getEntryByKey('API_VERSION');
         this.groupId = Liferay.ThemeDisplay.getScopeGroupId();
         this.portalUrl = Liferay.ThemeDisplay.getPortalURL();
     }
@@ -43,9 +44,9 @@ export class ArticleService {
 
         /* tslint:disable max-line-length */
         if (pager.size) {
-            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/page/${pager.page}/size/${pager.size}/sort/${pager.sortCriterion}/${pager.sortOrder}/${apiVersion}`;
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/page/${pager.page}/size/${pager.size}/sort/${pager.sortCriterion}/${pager.sortOrder}/${this.apiVersion}`;
         } else {
-            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/sort/${pager.sortCriterion}/${pager.sortOrder}/${apiVersion}`;
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/sort/${pager.sortCriterion}/${pager.sortOrder}/${this.apiVersion}`;
         }
         /* tslint:enable max-line-length */
 
@@ -53,13 +54,17 @@ export class ArticleService {
             .map((res) => {
                 return res.json();
             })
+            .catch((err) => {
+                return [{error: err}];
+            })
             .toPromise();
     }
 
     public getArticleById(articleId: number): Promise<any> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/content/{articleId}/v1
 
-        const articleUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/content/${articleId}/${apiVersion}`;
+        const articleUrl =
+            `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/content/${articleId}/${this.apiVersion}`;
 
         return this.http.get(articleUrl)
             .map((res) => {
@@ -99,9 +104,9 @@ export class ArticleService {
 
         /* tslint:disable max-line-length */
         if (pager) {
-            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/page/${pager.page}/size/${pager.size}/sort/${pager.sortCriterion}/${pager.sortOrder}/${apiVersion}`;
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/page/${pager.page}/size/${pager.size}/sort/${pager.sortCriterion}/${pager.sortOrder}/${this.apiVersion}`;
         } else {
-            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/sort/${pager.sortCriterion}/${pager.sortOrder}/${apiVersion}`;
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/sort/${pager.sortCriterion}/${pager.sortOrder}/${this.apiVersion}`;
         }
         /* tslint:enable max-line-length */
 
@@ -114,7 +119,7 @@ export class ArticleService {
 
     public getUnreadCount(): Promise<any> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadcount/v1
-        const unreadCountUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadcount/${apiVersion}`;
+        const unreadCountUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadcount/${this.apiVersion}`;
 
         return this.http.get(unreadCountUrl)
             .map((res) => {

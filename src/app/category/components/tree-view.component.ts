@@ -47,6 +47,15 @@ export class TreeViewComponent implements OnInit {
         });
     }
 
+    /*
+        Handles category tree-node click. Updates jsTree state previously
+        selected cateogry and newly selected category and emite events
+        to parent component.
+
+        @method select
+        @param {Category} category CSD Hub Knowledge Base category object
+        @public
+     */
     select(category: Category) {
         if (this.selectedCategory) {
             this.selectedCategory.state.selected = false;

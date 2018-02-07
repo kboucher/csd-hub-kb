@@ -24,7 +24,13 @@
             <ul class="list-inline">
                 <li *ngFor="let category of article.categories">
                     <a uiSref="categories.articles"
-                        [uiParams]="{ categoryId: category.categoryId, page: 1, size: pageSize }"
+                        [uiParams]="{
+                            categoryId: category.categoryId,
+                            page: 1,
+                            size: pageSize,
+                            sortCriterion: sortCriterion,
+                            sortOrder: sortOrder
+                        }"
                         [uiOptions]="{ location: true }">
                             {{ category.categoryName }}
                     </a>

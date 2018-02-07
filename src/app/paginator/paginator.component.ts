@@ -45,22 +45,51 @@ export class PaginatorComponent implements OnChanges {
         }
     }
 
+    /*
+        Handles page link click. Emits event to parent component.
+
+        @method changePage
+        @param {Number} pageNum Page number to navigate to
+        @public
+     */
     public changePage(pageNum: number) {
         event.preventDefault();
 
         this.goToPage.emit({pageNum, pageSize: this.pageSize});
     }
 
+    /*
+        Handles page size select change. Emits event to parent component.
+
+        @method changePageSize
+        @param {Number} pageSize Desired number of articles per page
+        @public
+     */
     public changePageSize(pageSize: number) {
         event.preventDefault();
 
         this.goToPage.emit({pageNum: 1, pageSize});
     }
 
+    /*
+        Handles sort options click. Emits event to parent component.
+
+        @method updateSort
+        @param {Object} options Hash containing property values specifying the
+                        desired sort criterion and order.
+        @public
+     */
     public updateSort(options: any) {
         this.changeSort.emit(options);
     }
 
+    /*
+        Defines the number of required page links based on the dataset
+        and preferred maximum number of page links to display.
+
+        @method setDisplayPages
+        @private
+     */
     private setDisplayPages() {
         const pages = [];
         const half = Math.floor(this.displayMax / 2);

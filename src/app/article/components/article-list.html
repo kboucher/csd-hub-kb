@@ -12,6 +12,7 @@
             (selected)="onSelected($event)">
         </kb-category-tree-view>
     </div>
+
     <div class="category-articles col-xs-12"
         [class.hidden-xs]="isArticleState"
         [class.hidden-sm]="isArticleState"
@@ -19,7 +20,7 @@
         [class.col-xs-12]="!isArticleState"
         [class.col-sm-9]="!isArticleState"
         [class.col-lg-10]="!isArticleState">
-            <ui-view name="articles">
+            <ui-view name="articles" *ngIf="!isError">
                 <div class="articles-list-container" [class.compact]="isArticleState" *ngIf="articles.length">
                     <div class="row">
                         <h3 class="col-sm-12">
@@ -79,6 +80,12 @@
                     *ngIf="!articles.length">
                 </kb-system-notification>
             </ui-view>
+            <kb-system-notification
+                *ngIf="isError"
+                icon="icon-warning-sign"
+                notificationClass="article-error"
+                [message]="errorMessage">
+            </kb-system-notification>
     </div>
     <div class="article-container col-xs-12 col-sm-9 col-lg-7" *ngIf="isArticleState">
         <ui-view name="article"></ui-view>

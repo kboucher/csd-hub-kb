@@ -10,6 +10,11 @@ From project root:
 2. `gulp build`
 3. `gulp deploy`
 
+## Liferay Configurations
+
+### portal-ext.properties
+`javascript.single.page.application.enabled=false`
+
 ## Third-party Components
 
 ### jsTree jQuery Plugin

@@ -1,7 +1,7 @@
 declare var Liferay: any;
 
 import { Injectable } from '@angular/core';
-import * as config from './app.config';
+import { AppConfig } from '../config/app.config';
 
 const pageSizeKey = 'kbArticlesPageSize';
 const sortCriterionKey = 'kbArticlesSortCriterion';
@@ -9,20 +9,28 @@ const sortOrderKey = 'kbArticlesSortOrder';
 
 @Injectable()
 export class AppService {
+    private defaultPageSize: number;
+    private defaultSortCriterion: string;
+    private defaultSortOrder: string;
+
+    constructor(private appConfig: AppConfig) {
+        this.defaultPageSize = appConfig.getEntryByKey('DEFAULT_PAGE_SIZE');
+        this.defaultSortCriterion = appConfig.getEntryByKey('DEFAULT_SORT_CRITERION');
+        this.defaultSortOrder = appConfig.getEntryByKey('DEFAULT_SORT_ORDER');
+    }
 
     public getPageSize(): number {
-        const defaultPageSize = config.getDefaultPageSize();
-        const pageSize = this.getFromLocalStorage(pageSizeKey, defaultPageSize.toString());
+        const pageSize = this.getFromLocalStorage(pageSizeKey, this.defaultPageSize.toString());
 
         return +pageSize;
     }
 
     public getSortCriterion(): string {
-        return this.getFromLocalStorage(sortCriterionKey, config.getDefaultSortCriterion());
+        return this.getFromLocalStorage(sortCriterionKey, this.defaultSortCriterion);
     }
 
     public getSortOrder(): string {
-        return this.getFromLocalStorage(sortOrderKey, config.getDefaultSortOrder());
+        return this.getFromLocalStorage(sortOrderKey, this.defaultSortOrder);
     }
 
     public savePageSize(size: string) {

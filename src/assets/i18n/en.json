@@ -1,0 +1,40 @@
+{
+    "STRINGS": {
+        "app": {
+            "categories": "Categories",
+            "date": "Date",
+            "title": "Title",
+            "unreadArticles": "Unread Articles"
+        },
+        "articles": {
+            "noArticlesInCategory": "There are currently no <strong>%@</strong> articles available.",
+            "noMoreUnread": "You're all caught up on unread articles!",
+            "publishedDateLabel": "Published/Updated"
+        },
+        "categories": {
+            "filterPlaceholder": "Filter categories"
+        },
+        "errors": {
+            "anonymousUser": "In order to use the CSD Hub Knowledge Base, you must be signed-in.",
+            "articleAndUnreadCount403": "User has no permission",
+            "articleAndUnreadCount404": "The article you are requesting does not exist.",
+            "articleAndUnreadCount406": "Article content will be available soon, please try again later.",
+            "articleAndUnreadCount500": "We can't handle your request at the moment, please try again later. If problem persists, contact site admin.",
+            "articleAndUnreadCount503": "We can't handle your request at the moment, please try again later.",
+            "categoryArticles403": "User has no permission",
+            "categoryArticles404": "Category not found",
+            "categoryList403": "User has no permission",
+            "categoryList500": "System configuration error, please contact site admin.",
+            "unreadArticles403": "User has no permission",
+            "unreadArticles500": "We can't handle your request at the moment, please try again later.",
+            "userUnreadCount403": "User has no permission",
+            "userUnreadCount500": "We can't handle your request at the moment, please try again later. If problem persists, contact site admin."
+        },
+        "paginator": {
+            "of": "of",
+            "perPage": "per page",
+            "showing": "showing",
+            "sortBy": "Sort by"
+        }
+    }
+}

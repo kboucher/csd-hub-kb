@@ -1,6 +1,7 @@
 .knowledge-base-portlet {
     background: transparent;
     border-color: transparent;
+    min-height: 75vh; // Hack to prevent footer flash when states change
     padding: 0 15px 1px;
 
     h2 {

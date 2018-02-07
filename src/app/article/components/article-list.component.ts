@@ -1,7 +1,14 @@
+/*
+    Primary component responsible for the display of article lists
+    and is the parent component of the singular article view component.
+
+    @module ArticleListComponent
+ */
+
 import { Component, Input, OnInit } from '@angular/core';
 import { UIRouter } from '@uirouter/angular';
 
-import * as config from '../../app.config';
+import { AppConfig } from '../../../config/app.config';
 import { Category } from '../../category/models/category';
 import { Article } from '../models/article';
 import { ArticleService } from '../services/article-service';
@@ -21,81 +28,54 @@ export class ArticleListComponent implements OnInit {
     @Input() sortCriterion: string;
     @Input() sortOrder: string;
 
-    isArticleState: boolean = false;
-    selectedArticleId: string = null;
-    unreadCount: number = 0;
-    articles: Article[];
-    emptyMssg: string;
-    emptyMssgIcon: string;
-    page: number;
-    pagerDisplayMax: number = config.getArticleListPagingMax();
-    pages: number[] = [];
-    sortOptions: any[] = [
+    public articles: Article[];
+    public emptyMssg: string;
+    public emptyMssgIcon: string;
+    public errorMessage: string = null;
+    public isArticleState: boolean = false;
+    public isError: boolean = false;
+    public page: number;
+    public pagerDisplayMax: number;
+    public pages: number[] = [];
+    public selectedArticleId: string = null;
+    public sortOptions: any[] = [
         {id: 'date', name: 'Date'},
         {id: 'title', name: 'Title'},
     ];
-    total: number;
+    public unreadCount: number = 0;
+    public total: number;
 
     constructor(
+        private appConfig: AppConfig,
         private articleService: ArticleService,
         private uiRouter: UIRouter,
-    ) {}
+    ) {
+        this.pagerDisplayMax = appConfig.getEntryByKey('ARTICLE_LIST_PAGING_MAX');
+    }
 
     ngOnInit() {
-        // Handle direct links to articles
-        if (/\.article$/.test(this.uiRouter.stateService.$current.name)) {
-            this.isArticleState = true;
-        }
+        this.handleListErrors(this.articlesResponse);
+        this.handleArticleState();
+        this.resetCategoryOnExit();
+        this.updateUnreadCount();
 
-        // Handle subsequents state changes between articles list and individual articles
-        this.uiRouter.transitionService.onEnter({ entering: '**.article' }, (trans) => {
-            this.isArticleState = true;
-            this.selectedArticleId = trans.params().articleId;
-        });
-        this.uiRouter.transitionService.onExit({ exiting: '**.article' }, (trans) => {
-            /*
-                TODO: Why does "exit" fire when we are merely retaining?
-             */
-            if (trans.$to().name !== 'categories.articles.article') {
-                this.isArticleState = false;
-            }
-        });
-
-        this.uiRouter.transitionService.onExit({ exiting: 'categories.articles' }, (trans) => {
-            if (this && this.selectedCategory) {
-                this.selectedCategory.state.selected = false;
-            }
-        });
-
-        this.articleService.getUnreadCount().then((unread) => {
-            this.unreadCount = unread.unreadCount;
-        });
-
-        this.articles = this.articlesResponse.articles;
-        this.page = this.articlesResponse.page;
-        this.pageSize = this.articlesResponse.size;
-        this.total = this.articlesResponse.total;
-
-        // Handle category vs. unread-articles lists
-        if (this.selectedCategory) {
-            this.selectedCategory.state.selected = true;
-            this.selectedCategory.state.opened = true;
-
-            this.emptyMssg = 'There are currently no <strong>' +
-                    this.selectedCategory.text +
-                    '</strong> articles available.';
-            this.emptyMssgIcon = 'icon-folder-open-alt';
-        } else {
-            this.emptyMssg = 'You\'re all caught up on unread articles!';
-            this.emptyMssgIcon = 'icon-thumbs-up';
-        }
-
-        for (let i = 0; i < Math.ceil(this.total / this.pageSize); i++) {
-            this.pages.push(i + 1);
+        if (!this.isError) {
+            this.setupList(this.articlesResponse);
+            this.handleInvalidPage();
+            this.setupCategory();
         }
     }
 
-    changeSort(options: any) {
+    /*
+        Updates articles list router state to modify sort preferences. Is no-op
+        if the requested sorting change matches the current sorting options.
+
+        @method changeSort
+        @param {Object} options Hash containing property values specifying the
+                        desired sort criterion and order.
+        @public
+     */
+    public changeSort(options: any) {
         if (options.sortCriterion === this.sortCriterion && options.sortOrder === this.sortOrder) {
             return false;
         }
@@ -112,12 +92,22 @@ export class ArticleListComponent implements OnInit {
         }, { location: true });
     }
 
-    goToPage(options: any) {
+    /*
+        Updates articles list router state to modify paging preferences.
+
+        @method goToPage
+        @param {Object} options Hash containing property values specifying the
+                        desired page number and page size.
+        @public
+     */
+    public goToPage(options: any) {
         const params = {
             articleId: null,
             categoryId: null,
             page: options.pageNum,
             size: options.pageSize,
+            sortCriterion: this.sortCriterion,
+            sortOrder: this.sortOrder,
         };
 
         /*
@@ -150,8 +140,14 @@ export class ArticleListComponent implements OnInit {
         this.uiRouter.stateService.go(state, params, { location: true });
     }
 
-    // Handles category tree-view click
-    onSelected($event) {
+    /*
+        Handles category tree-view (jsTree) node click.
+
+        @method onSelected
+        @param {Object} $event jQuery event object
+        @public
+     */
+    public onSelected($event) {
         this.selectedCategory = $event.category;
 
         this.uiRouter.stateService.go('categories.articles', {
@@ -159,6 +155,157 @@ export class ArticleListComponent implements OnInit {
             selectedCategory: $event.category,
             page: 1,
             size: this.pageSize,
+            sortCriterion: this.sortCriterion,
+            sortOrder: this.sortOrder,
         }, { location: true });
+    }
+
+    /*
+        Handles API errors returned from the article-service.
+
+        @method handleListErrors
+        @param {Object} response UI Router app module's article response object
+        @private
+     */
+    private handleListErrors(response) {
+        if (response.error) {
+            this.isError = true;
+            this.errorMessage = JSON.parse(response.error._body).message;
+        }
+    }
+
+    /*
+        Sets properties that handle the display of an article within
+        the context of this parent (by state/route) module.
+
+        @method handleArticleState
+        @private
+     */
+    private handleArticleState() {
+        // Handle direct links to articles
+        if (/\.article$/.test(this.uiRouter.stateService.$current.name)) {
+            this.isArticleState = true;
+        }
+
+        // Handle subsequents state changes between articles list and individual articles
+        this.uiRouter.transitionService.onEnter({ entering: '**.article' }, (trans) => {
+            this.isArticleState = true;
+            this.selectedArticleId = trans.params().articleId;
+
+            // mark as read
+            const listItem = this.articles.find((item) => {
+                return item.id.toString() === this.selectedArticleId;
+            });
+
+            if (listItem) {
+                listItem.read = true;
+            }
+        });
+
+        this.uiRouter.transitionService.onExit({ exiting: '**.article' }, (trans) => {
+            /*
+                TODO: Why does "exit" fire when we are merely retaining?
+             */
+            if (trans.$to().name !== 'categories.articles.article') {
+                this.isArticleState = false;
+            }
+        });
+    }
+
+    /*
+        Redirects users to the first page of articles for the selected category
+        if there are no articles present on the requested page.
+
+        @method handleInvalidPage
+        @private
+     */
+    private handleInvalidPage() {
+        if (!this.articles.length && this.page > 1) {
+            let redirState = this.selectedCategory ?
+                'categories.articles' :
+                'categories.unread';
+
+            if (this.isArticleState && this.articleId !== null) {
+                redirState = redirState + '.article';
+            }
+
+            this.uiRouter.stateService.go(redirState, {
+                articleId: this.articleId || null,
+                page: 1,
+                size: this.pageSize,
+                sortCriterion: this.sortCriterion,
+                sortOrder: this.sortOrder,
+            }, { location: true });
+        }
+    }
+
+    /*
+        Resets the `selected` state on the currently selected category
+        when exiting the articles list. (Prevents multiple tree nodes
+        from appearing to be selected when re-entering this list).
+
+        @method resetCategoryOnExit
+        @private
+     */
+    private resetCategoryOnExit() {
+        this.uiRouter.transitionService.onExit({ exiting: 'categories.articles' }, (trans) => {
+            if (this && this.selectedCategory) {
+                this.selectedCategory.state.selected = false;
+            }
+        });
+    }
+
+    /*
+        Initializes selected category for tree-view display and
+        sets up different empty list messages for unread vs.
+        category listings.
+
+        @method setupCategory
+        @private
+     */
+    private setupCategory() {
+        if (this.selectedCategory) {
+            this.selectedCategory.state.selected = true;
+            this.selectedCategory.state.opened = true;
+
+            this.emptyMssg = 'There are currently no <strong>' +
+                    this.selectedCategory.text +
+                    '</strong> articles available.';
+            this.emptyMssgIcon = 'icon-folder-open-alt';
+        } else {
+            this.emptyMssg = 'You\'re all caught up on unread articles!';
+            this.emptyMssgIcon = 'icon-thumbs-up';
+        }
+    }
+
+    /*
+        Sets component's articles property from the provided API response
+        and sets up properties required for paging functionality.
+
+        @method setupList
+        @param {Object} response UI Router app module's article response object
+        @private
+     */
+    private setupList(response) {
+        this.articles = response.articles;
+        this.page = response.page;
+        this.pageSize = response.size;
+        this.total = response.total;
+
+        for (let i = 0; i < Math.ceil(this.total / this.pageSize); i++) {
+            this.pages.push(i + 1);
+        }
+    }
+
+    /*
+        Updates user's unread count via a call to the article service.
+
+        @method updateUnreadCount
+        @private
+     */
+    private updateUnreadCount() {
+        this.articleService.getUnreadCount().then((unread) => {
+            this.unreadCount = unread.unreadCount;
+        });
     }
 }

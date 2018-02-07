@@ -1,0 +1,8 @@
+{
+    "API_VERSION": "v1",
+    "ARTICLE_LIST_PAGING_MAX": 7,
+    "DEBUGGING": true,
+    "DEFAULT_PAGE_SIZE": 25,
+    "DEFAULT_SORT_CRITERION": "date",
+    "DEFAULT_SORT_ORDER": "desc"
+}
