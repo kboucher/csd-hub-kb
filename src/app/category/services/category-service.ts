@@ -34,6 +34,9 @@ export class CategoryService {
             .map((res) => {
                 return this.addStates(res.json());
             })
+            .catch((err) => {
+                return [{error: err}];
+            })
             .toPromise();
     }
 

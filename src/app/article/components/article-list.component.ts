@@ -6,6 +6,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { UIRouter } from '@uirouter/angular';
 
 import { AppConfig } from '../../../config/app.config';
@@ -14,7 +15,7 @@ import { Article } from '../models/article';
 import { ArticleService } from '../services/article-service';
 
 @Component({
-    providers: [ArticleService],
+    providers: [ArticleService, TranslateService],
     selector: 'kb-article-list',
     styleUrls: ['./article-list.scss'],
     templateUrl: './article-list.html',
@@ -38,16 +39,14 @@ export class ArticleListComponent implements OnInit {
     public pagerDisplayMax: number;
     public pages: number[] = [];
     public selectedArticleId: string = null;
-    public sortOptions: any[] = [
-        {id: 'date', name: 'Date'},
-        {id: 'title', name: 'Title'},
-    ];
+    public sortOptions: any[];
     public unreadCount: number = 0;
     public total: number;
 
     constructor(
         private appConfig: AppConfig,
         private articleService: ArticleService,
+        private translate: TranslateService,
         private uiRouter: UIRouter,
     ) {
         this.pagerDisplayMax = appConfig.getEntryByKey('ARTICLE_LIST_PAGING_MAX');
@@ -170,7 +169,20 @@ export class ArticleListComponent implements OnInit {
     private handleListErrors(response) {
         if (response.error) {
             this.isError = true;
-            this.errorMessage = JSON.parse(response.error._body).message;
+
+            if (response.error.status === 404) {
+                this.translate.get('STRINGS.errors.categoryArticles404').subscribe((res) => {
+                    this.errorMessage = res;
+                });
+            } else if (response.error.status === 403) {
+                this.translate.get('STRINGS.errors.categoryArticles403').subscribe((res) => {
+                    this.errorMessage = res;
+                });
+            } else {
+                this.translate.get('STRINGS.errors.unknown').subscribe((res) => {
+                    this.errorMessage = res;
+                });
+            }
         }
     }
 
@@ -268,13 +280,17 @@ export class ArticleListComponent implements OnInit {
             this.selectedCategory.state.selected = true;
             this.selectedCategory.state.opened = true;
 
-            this.emptyMssg = 'There are currently no <strong>' +
-                    this.selectedCategory.text +
-                    '</strong> articles available.';
             this.emptyMssgIcon = 'icon-folder-open-alt';
+            this.translate.get('STRINGS.articles.noArticlesInCategory', { category: this.selectedCategory.text })
+                .subscribe((res: string) => {
+                    this.emptyMssg = res;
+                });
         } else {
-            this.emptyMssg = 'You\'re all caught up on unread articles!';
             this.emptyMssgIcon = 'icon-thumbs-up';
+            this.translate.get('STRINGS.articles.noMoreUnread')
+                .subscribe((res: string) => {
+                    this.emptyMssg = res;
+                });
         }
     }
 
@@ -291,6 +307,13 @@ export class ArticleListComponent implements OnInit {
         this.page = response.page;
         this.pageSize = response.size;
         this.total = response.total;
+
+        this.translate.get(['STRINGS.app.date', 'STRINGS.app.title']).subscribe((res) => {
+            this.sortOptions = [
+                {id: 'date', name: res['STRINGS.app.date'] },
+                {id: 'title', name: res['STRINGS.app.title'] },
+            ];
+        });
 
         for (let i = 0; i < Math.ceil(this.total / this.pageSize); i++) {
             this.pages.push(i + 1);

@@ -18,9 +18,12 @@
             <span [innerHTML]="article.title | preventOrphans"></span>
         </h2>
         <div [innerHTML]="article.body | safe:html"></div>
-        <p><strong>Published/Updated:</strong> {{ article.date | date:"MMM d, y" }}</p>
+        <p>
+            <strong>{{ 'STRINGS.articles.publishedDateLabel' | translate }}:</strong>
+            {{ article.date | date:"MMM d, y" }}
+        </p>
         <div>
-            <strong>Categories:</strong>
+            <strong>{{ 'STRINGS.app.categories' | translate }}:</strong>
             <ul class="list-inline">
                 <li *ngFor="let category of article.categories">
                     <a uiSref="categories.articles"

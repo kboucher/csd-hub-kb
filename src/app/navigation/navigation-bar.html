@@ -1,13 +1,13 @@
 <div class="row">
     <ol class="col-sm-12 breadcrumb kb-navigation-bar">
-        <li><a uiSref="categories" uiSrefActiveEq="active">Categories</a></li>
+        <li><a uiSref="categories" uiSrefActiveEq="active">{{ 'STRINGS.app.categories' | translate }}</a></li>
 
         <li class="unread-articles" *ngIf="unreadCount > 0">
             <a uiSref="categories.unread"
                 [uiParams]="{ page: 1, size: pageSize, sortCriterion: sortCriterion, sortOrder: sortOrder }"
                 [uiOptions]="{ location: true }"
                 class="jewel-link">
-                    Unread Articles
+                    {{ 'STRINGS.app.unreadArticles' | translate }}
                     <span class="jewel-count">{{ unreadCount }}</span>
             </a>
         </li>

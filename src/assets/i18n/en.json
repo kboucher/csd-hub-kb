@@ -7,7 +7,7 @@
             "unreadArticles": "Unread Articles"
         },
         "articles": {
-            "noArticlesInCategory": "There are currently no <strong>%@</strong> articles available.",
+            "noArticlesInCategory": "There are currently no <strong>{{category}}</strong> articles available.",
             "noMoreUnread": "You're all caught up on unread articles!",
             "publishedDateLabel": "Published/Updated"
         },
@@ -25,6 +25,7 @@
             "categoryArticles404": "Category not found",
             "categoryList403": "User has no permission",
             "categoryList500": "System configuration error, please contact site admin.",
+            "unknown": "An unknown error has occurred, please contact site admin.",
             "unreadArticles403": "User has no permission",
             "unreadArticles500": "We can't handle your request at the moment, please try again later.",
             "userUnreadCount403": "User has no permission",
