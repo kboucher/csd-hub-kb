@@ -9,4 +9,13 @@ export class SystemNotificationComponent {
     @Input() icon: string;
     @Input() message: string;
     @Input() notificationClass: string;
+
+    /*
+        AOT requires this property (somehow related to SafePipe).
+
+        Removing the `safe:html` call from the template precludes the
+        need for this property. (Though, we do not see this issue in
+        the ArticleComponent/template.)
+    */
+    html: string;
 }

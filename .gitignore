@@ -1,4 +1,6 @@
+aot
 build
 dist
+ngcout
 node_modules
 npm-debug.log

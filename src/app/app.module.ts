@@ -29,6 +29,71 @@ import { CategoryService } from './category/services/category-service';
 import { PreventOrphansPipe } from './pipes/prevent-orphans.pipe';
 import { SafePipe } from './pipes/safe.pipe';
 
+export function resolveErrorParams(transition) {
+    return transition.targetState()._params.error;
+}
+
+export function resolveCategoriesService(categoryService) {
+    return categoryService.getCategories();
+}
+
+export function resolveArticles(transition, articleService) {
+    return articleService.getArticlesByCategory(transition.params().categoryId, {
+        page: transition.params().page,
+        size: transition.params().size,
+        sortCriterion: transition.params().sortCriterion,
+        sortOrder: transition.params().sortOrder,
+    });
+}
+
+export function resolveUnreadArticles(transition, articleService) {
+    return articleService.getUnreadArticles({
+        page: transition.params().page,
+        size: transition.params().size,
+        sortCriterion: transition.params().sortCriterion,
+        sortOrder: transition.params().sortOrder,
+    });
+}
+
+export function resolveArticle(transition, articleService) {
+    return articleService.getArticleById(transition.params().articleId, {
+        page: transition.params().page,
+        size: transition.params().size,
+    });
+}
+
+export function resolveArticleId(transition) {
+    return transition.params().articleId;
+}
+
+export function resolveCategories(categories) {
+    return categories;
+}
+
+export function resolvePageNum(transition) {
+    return transition.params().page;
+}
+
+export function resolvePageSize(transition) {
+    return transition.params().size;
+}
+
+export function resolveSortCriterion(transition) {
+    return transition.params().sortCriterion;
+}
+
+export function resolveSortOrder(transition) {
+    return transition.params().sortOrder;
+}
+
+export function resolveSelectedCategoryService(transition, categoryService, categories) {
+    return categoryService.findById(categories, transition.params().categoryId);
+}
+
+export function resolveSelectedCategory(selectedCategory) {
+    return selectedCategory;
+}
+
 const anonymousUserState = {
     name: 'anonymous-user',
     url: '/anonymous-user',
@@ -45,7 +110,7 @@ const errorState = {
             token: 'error',
             deps: [Transition],
             // TODO: Why aren't ˋparamsˋ accessible via ˋtrans.params()ˋ?
-            resolveFn: (trans) => trans.targetState()._params.error,
+            resolveFn: resolveErrorParams,
         },
     ],
     views: {
@@ -60,7 +125,7 @@ const categoriesState = {
         {
             token: 'categories',
             deps: [CategoryService],
-            resolveFn: (categoryService) => categoryService.getCategories(),
+            resolveFn: resolveCategoriesService,
         },
     ],
     views: {
@@ -75,43 +140,35 @@ const articlesState = {
         {
             token: 'articlesResponse',
             deps: [Transition, ArticleService],
-            resolveFn: (trans, articleService) => {
-                return articleService.getArticlesByCategory(trans.params().categoryId, {
-                    page: trans.params().page,
-                    size: trans.params().size,
-                    sortCriterion: trans.params().sortCriterion,
-                    sortOrder: trans.params().sortOrder,
-                });
-            },
+            resolveFn: resolveArticles,
         }, {
             token: 'articleId',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().articleId,
+            resolveFn: resolveArticleId,
         }, {
             token: 'categories',
             deps: ['categories'],
-            resolveFn: (categories) => categories,
+            resolveFn: resolveCategories,
         }, {
             token: 'pageNum',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().page,
+            resolveFn: resolvePageNum,
         }, {
             token: 'pageSize',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().size,
+            resolveFn: resolvePageSize,
         }, {
             token: 'sortCriterion',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().sortCriterion,
+            resolveFn: resolveSortCriterion,
         }, {
             token: 'sortOrder',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().sortOrder,
+            resolveFn: resolveSortOrder,
         }, {
             token: 'selectedCategory',
             deps: [Transition, CategoryService, 'categories'],
-            resolveFn: (trans, categoryService, categories) =>
-                    categoryService.findById(categories, trans.params().categoryId),
+            resolveFn: resolveSelectedCategoryService,
         },
     ],
     views: {
@@ -126,36 +183,31 @@ const unreadArticlesState = {
         {
             token: 'articlesResponse',
             deps: [Transition, ArticleService],
-            resolveFn: (trans, articleService) => articleService.getUnreadArticles({
-                page: trans.params().page,
-                size: trans.params().size,
-                sortCriterion: trans.params().sortCriterion,
-                sortOrder: trans.params().sortOrder,
-            }),
+            resolveFn: resolveUnreadArticles,
         }, {
             token: 'articleId',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().articleId,
+            resolveFn: resolveArticleId,
         }, {
             token: 'categories',
             deps: ['categories'],
-            resolveFn: (categories) => categories,
+            resolveFn: resolveCategories,
         }, {
             token: 'pageNum',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().page,
+            resolveFn: resolvePageNum,
         }, {
             token: 'pageSize',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().size,
+            resolveFn: resolvePageSize,
         }, {
             token: 'sortCriterion',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().sortCriterion,
+            resolveFn: resolveSortCriterion,
         }, {
             token: 'sortOrder',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().sortOrder,
+            resolveFn: resolveSortOrder,
         },
     ],
     views: {
@@ -170,26 +222,23 @@ const articleState = {
         {
             token: 'article',
             deps: [Transition, ArticleService],
-            resolveFn: (trans, articleService) => articleService.getArticleById(trans.params().articleId, {
-                page: trans.params().page,
-                size: trans.params().size,
-            }),
+            resolveFn: resolveArticle,
         }, {
             token: 'category',
             deps: ['selectedCategory'],
-            resolveFn: (selectedCategory) => selectedCategory,
+            resolveFn: resolveSelectedCategory,
         }, {
             token: 'pageSize',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().size,
+            resolveFn: resolvePageSize,
         }, {
             token: 'sortCriterion',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().sortCriterion,
+            resolveFn: resolveSortCriterion,
         }, {
             token: 'sortOrder',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().sortOrder,
+            resolveFn: resolveSortOrder,
         },
     ],
     views: {
@@ -204,19 +253,19 @@ const unreadArticleState = {
         {
             token: 'article',
             deps: [Transition, ArticleService],
-            resolveFn: (trans, articleService) => articleService.getArticleById(trans.params().articleId),
+            resolveFn: resolveArticle,
         }, {
             token: 'pageSize',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().size,
+            resolveFn: resolvePageSize,
         }, {
             token: 'sortCriterion',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().sortCriterion,
+            resolveFn: resolveSortCriterion,
         }, {
             token: 'sortOrder',
             deps: [Transition],
-            resolveFn: (trans) => trans.params().sortOrder,
+            resolveFn: resolveSortOrder,
         },
     ],
     views: {
