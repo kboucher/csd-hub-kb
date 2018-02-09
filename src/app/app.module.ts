@@ -104,15 +104,15 @@ const anonymousUserState = {
 
 const errorState = {
     name: 'error',
-    url: '/error',
     resolve: [
         {
-            token: 'error',
             deps: [Transition],
             // TODO: Why aren't ˋparamsˋ accessible via ˋtrans.params()ˋ?
             resolveFn: resolveErrorParams,
+            token: 'error',
         },
     ],
+    url: '/error',
     views: {
         '!$default': { component: ErrorComponent },
     },
@@ -120,14 +120,14 @@ const errorState = {
 
 const categoriesState = {
     name: 'categories',
-    url: '/categories',
     resolve: [
         {
-            token: 'categories',
             deps: [CategoryService],
             resolveFn: resolveCategoriesService,
+            token: 'categories',
         },
     ],
+    url: '/categories',
     views: {
         '!$default': { component: CategoryListComponent },
     },
@@ -135,42 +135,42 @@ const categoriesState = {
 
 const articlesState = {
     name: 'categories.articles',
-    url: '/:categoryId/articles/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
     resolve: [
         {
-            token: 'articlesResponse',
             deps: [Transition, ArticleService],
             resolveFn: resolveArticles,
+            token: 'articlesResponse',
         }, {
-            token: 'articleId',
             deps: [Transition],
             resolveFn: resolveArticleId,
+            token: 'articleId',
         }, {
-            token: 'categories',
             deps: ['categories'],
             resolveFn: resolveCategories,
+            token: 'categories',
         }, {
-            token: 'pageNum',
             deps: [Transition],
             resolveFn: resolvePageNum,
+            token: 'pageNum',
         }, {
-            token: 'pageSize',
             deps: [Transition],
             resolveFn: resolvePageSize,
+            token: 'pageSize',
         }, {
-            token: 'sortCriterion',
             deps: [Transition],
             resolveFn: resolveSortCriterion,
+            token: 'sortCriterion',
         }, {
-            token: 'sortOrder',
             deps: [Transition],
             resolveFn: resolveSortOrder,
+            token: 'sortOrder',
         }, {
-            token: 'selectedCategory',
             deps: [Transition, CategoryService, 'categories'],
             resolveFn: resolveSelectedCategoryService,
+            token: 'selectedCategory',
         },
     ],
+    url: '/:categoryId/articles/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
     views: {
         '!$default': { component: ArticleListComponent },
     },
@@ -178,38 +178,38 @@ const articlesState = {
 
 const unreadArticlesState = {
     name: 'categories.unread',
-    url: '/unread/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
     resolve: [
         {
-            token: 'articlesResponse',
             deps: [Transition, ArticleService],
             resolveFn: resolveUnreadArticles,
+            token: 'articlesResponse',
         }, {
-            token: 'articleId',
             deps: [Transition],
             resolveFn: resolveArticleId,
+            token: 'articleId',
         }, {
-            token: 'categories',
             deps: ['categories'],
             resolveFn: resolveCategories,
+            token: 'categories',
         }, {
-            token: 'pageNum',
             deps: [Transition],
             resolveFn: resolvePageNum,
+            token: 'pageNum',
         }, {
-            token: 'pageSize',
             deps: [Transition],
             resolveFn: resolvePageSize,
+            token: 'pageSize',
         }, {
-            token: 'sortCriterion',
             deps: [Transition],
             resolveFn: resolveSortCriterion,
+            token: 'sortCriterion',
         }, {
-            token: 'sortOrder',
             deps: [Transition],
             resolveFn: resolveSortOrder,
+            token: 'sortOrder',
         },
     ],
+    url: '/unread/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
     views: {
         '!$default': { component: ArticleListComponent },
     },
@@ -217,30 +217,30 @@ const unreadArticlesState = {
 
 const articleState = {
     name: 'categories.articles.article',
-    url: '/:articleId',
     resolve: [
         {
-            token: 'article',
             deps: [Transition, ArticleService],
             resolveFn: resolveArticle,
+            token: 'article',
         }, {
-            token: 'category',
             deps: ['selectedCategory'],
             resolveFn: resolveSelectedCategory,
+            token: 'category',
         }, {
-            token: 'pageSize',
             deps: [Transition],
             resolveFn: resolvePageSize,
+            token: 'pageSize',
         }, {
-            token: 'sortCriterion',
             deps: [Transition],
             resolveFn: resolveSortCriterion,
+            token: 'sortCriterion',
         }, {
-            token: 'sortOrder',
             deps: [Transition],
             resolveFn: resolveSortOrder,
+            token: 'sortOrder',
         },
     ],
+    url: '/:articleId',
     views: {
         '^.article': { component: ArticleComponent },
     },
@@ -248,26 +248,26 @@ const articleState = {
 
 const unreadArticleState = {
     name: 'categories.unread.article',
-    url: '/:articleId',
     resolve: [
         {
-            token: 'article',
             deps: [Transition, ArticleService],
             resolveFn: resolveArticle,
+            token: 'article',
         }, {
-            token: 'pageSize',
             deps: [Transition],
             resolveFn: resolvePageSize,
+            token: 'pageSize',
         }, {
-            token: 'sortCriterion',
             deps: [Transition],
             resolveFn: resolveSortCriterion,
+            token: 'sortCriterion',
         }, {
-            token: 'sortOrder',
             deps: [Transition],
             resolveFn: resolveSortOrder,
+            token: 'sortOrder',
         },
     ],
+    url: '/:articleId',
     views: {
         '^.article': { component: ArticleComponent },
     },
@@ -276,38 +276,23 @@ const unreadArticleState = {
 export function initResources(config: AppConfig, translate: TranslationConfigModule, uiRouter: UIRouter) {
     const router = uiRouter;
 
-    return () => config.load(translate).then(() => {
-        /*
-            Recover from `deferIntercept: true` in UIRouterModule
-            import below. (Allows Ng APP_INITIALIZER to finish before
-            routing begins.)
-         */
-        router.urlRouter.listen();
-        router.urlRouter.sync();
-    });
+    /* tslint:disable only-arrow-functions */
+    return function() {
+        config.load(translate).then(function() {
+            /*
+                Recover from `deferIntercept: true` in UIRouterModule
+                import below. (Allows Ng APP_INITIALIZER to finish before
+                routing begins.)
+             */
+            router.urlRouter.listen();
+            router.urlRouter.sync();
+        });
+    };
+    /* tslint:enable */
 }
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpModule,
-        TranslationConfigModule,
-        UIRouterModule.forRoot({
-            states: [
-                anonymousUserState,
-                articleState,
-                articlesState,
-                categoriesState,
-                errorState,
-                unreadArticleState,
-                unreadArticlesState,
-            ],
-            config: uiRouterConfigFn,
-            deferIntercept: true, // Allows APP_INITIALIZER to complete before routing
-            useHash: true,
-        }),
-    ],
+    bootstrap: [AppComponent],
     declarations: [
         AnonymousUserComponent,
         AppComponent,
@@ -322,18 +307,37 @@ export function initResources(config: AppConfig, translate: TranslationConfigMod
         SystemNotificationComponent,
         TreeViewComponent,
     ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        TranslationConfigModule,
+        UIRouterModule.forRoot({
+            config: uiRouterConfigFn,
+            deferIntercept: true, // Allows APP_INITIALIZER to complete before routing
+            states: [
+                anonymousUserState,
+                articleState,
+                articlesState,
+                categoriesState,
+                errorState,
+                unreadArticleState,
+                unreadArticlesState,
+            ],
+            useHash: true,
+        }),
+    ],
     providers: [
         AppConfig, {
-            provide: APP_INITIALIZER,
-            useFactory: initResources,
             deps: [AppConfig, TranslationConfigModule, UIRouter],
             multi: true,
+            provide: APP_INITIALIZER,
+            useFactory: initResources,
         },
         AppService,
         ArticleService,
         CategoryService,
     ],
-    bootstrap: [AppComponent],
 })
 
 export class AppModule {}

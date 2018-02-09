@@ -22,7 +22,7 @@ const translationOptions = {
     providers: [TranslateService],
 })
 export class TranslationConfigModule {
-    private browserLang;
+    browserLang;
 
     /*
         @param translate {TranslateService}

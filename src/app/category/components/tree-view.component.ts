@@ -7,10 +7,10 @@ import { CategoryService } from '../services/category-service';
 const treeSelector = '#category-tree';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'kb-category-tree-view',
     styleUrls: ['./tree-view.scss'],
     templateUrl: './tree-view.html',
-    encapsulation: ViewEncapsulation.None,
 })
 export class TreeViewComponent implements OnInit {
     @Input() categories: Category[];
