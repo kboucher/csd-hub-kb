@@ -11,7 +11,7 @@
     <div class="card col-xs-12 col-sm-6 col-md-3 col-lg-2" *ngFor="let category of categories">
         <a class="card-block"
             (click)="select(category)"
-            uiSref="categories.articles"
+            uiSref="categories.category.articles"
             [uiParams]="{ categoryId: category.id, page: 1, size: pageSize, sortCriterion: sortCriterion, sortOrder: sortOrder }"
             [uiOptions]="{ location: true }"
             title="{{ category.text }}">

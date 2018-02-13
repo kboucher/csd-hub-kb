@@ -1,10 +1,36 @@
-<div class="category-tree__filter">
-    <form id="category-tree-filter-form">
-        <input
-            type="search"
-            class="form-control"
-            id="category-tree-filter-input"
-            placeholder="{{ 'STRINGS.categories.filterPlaceholder' | translate }}">
-    </form>
+<kb-navigation-bar
+    [unreadCount]="unreadCount"
+    [pageSize]="pageSize"
+    [sortCriterion]="sortCriterion"
+    [sortOrder]="sortOrder">
+</kb-navigation-bar>
+<div class="categories-navigation row">
+    <div class="xs-12 col-sm-3 col-lg-2 category-tree">
+        <div class="category-tree__filter">
+            <form id="category-tree-filter-form">
+                <input
+                    type="search"
+                    class="form-control"
+                    id="category-tree-filter-input"
+                    placeholder="{{ 'STRINGS.categories.filterPlaceholder' | translate }}">
+            </form>
+        </div>
+        <div id="category-tree"></div>
+    </div>
+
+    <div class="category-articles col-xs-12"
+        [class.hidden-xs]="isArticleState"
+        [class.hidden-sm]="isArticleState"
+        [class.col-md-3]="isArticleState"
+        [class.col-xs-12]="!isArticleState"
+        [class.col-sm-9]="!isArticleState"
+        [class.col-lg-10]="!isArticleState">
+            <ui-view name="articles"></ui-view>
+    </div>
+
+    <div class="article-container col-xs-12 col-sm-9 col-lg-7" *ngIf="isArticleState">
+        <ui-view name="article"></ui-view>
+    </div>
 </div>
-<div id="category-tree"></div>
+
+

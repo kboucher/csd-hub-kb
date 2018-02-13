@@ -1,18 +1,3 @@
-.categories-navigation {
-    background: #fff;
-    border: solid #eee 1px;
-    border-radius: 2px;
-    display: flex;
-    margin-left: -15px;
-    margin-right: -15px;
-}
-
-.category-tree {
-    border-right: solid #eee 1px;
-    overflow-x: auto;
-    padding: 5px 7.5px 7.5px;
-}
-
 .category-articles {
     border-left: solid #eee 1px;
     margin-left: -1px;
@@ -39,10 +24,6 @@
             margin: 15px 7.5px;
         }
     }
-}
-
-.article-container {
-    border-left: solid #eee 1px;
 }
 
 .articles-list .unread-article {

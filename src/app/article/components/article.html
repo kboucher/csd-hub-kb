@@ -1,13 +1,13 @@
 <div class="article" *ngIf="article">
     <a class="btn btn-default back-btn"
-        uiSref="categories.articles"
+        uiSref="categories.category.articles"
         [uiParams]="{ categoryId: category.id, page: pageNum, size: pageSize }"
         [uiOptions]="{ location: true }"
         *ngIf="category">
             <i class="icon icon-remove"></i>
     </a>
     <a class="btn btn-default back-btn"
-        uiSref="categories.unread"
+        uiSref="categories.category.unread"
         [uiOptions]="{ location: true, reload: true }"
         *ngIf="!category">
             <i class="icon icon-remove"></i>
@@ -26,7 +26,7 @@
             <strong>{{ 'STRINGS.app.categories' | translate }}:</strong>
             <ul class="list-inline">
                 <li *ngFor="let category of article.categories">
-                    <a uiSref="categories.articles"
+                    <a uiSref="categories.category.articles"
                         [uiParams]="{
                             categoryId: category.categoryId,
                             page: 1,

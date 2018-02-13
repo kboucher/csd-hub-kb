@@ -12,10 +12,9 @@ import { UIRouter } from '@uirouter/angular';
 import { AppConfig } from '../../../config/app.config';
 import { Category } from '../../category/models/category';
 import { Article } from '../models/article';
-import { ArticleService } from '../services/article-service';
 
 @Component({
-    providers: [ArticleService, TranslateService],
+    providers: [TranslateService],
     selector: 'kb-article-list',
     styleUrls: ['./article-list.scss'],
     templateUrl: './article-list.html',
@@ -40,12 +39,10 @@ export class ArticleListComponent implements OnInit {
     public pages: number[] = [];
     public selectedArticleId: string = null;
     public sortOptions: any[];
-    public unreadCount: number = 0;
     public total: number;
 
     constructor(
         private appConfig: AppConfig,
-        private articleService: ArticleService,
         private translate: TranslateService,
         private uiRouter: UIRouter,
     ) {
@@ -56,7 +53,6 @@ export class ArticleListComponent implements OnInit {
         this.handleListErrors(this.articlesResponse);
         this.handleArticleState();
         this.resetCategoryOnExit();
-        this.updateUnreadCount();
 
         if (!this.isError) {
             this.setupList(this.articlesResponse);
@@ -80,8 +76,8 @@ export class ArticleListComponent implements OnInit {
         }
 
         const state = this.selectedCategory ?
-                'categories.articles' :
-                'categories.unread';
+                'categories.category.articles' :
+                'categories.category.unread';
 
         this.uiRouter.stateService.go(state, {
             page: this.page,
@@ -120,8 +116,8 @@ export class ArticleListComponent implements OnInit {
         const articleId = this.selectedArticleId || this.articleId;
 
         let state = this.selectedCategory ?
-                'categories.articles' :
-                'categories.unread';
+                'categories.category.articles' :
+                'categories.category.unread';
 
         if (this.selectedCategory) {
             params.categoryId = this.selectedCategory.id;
@@ -149,10 +145,10 @@ export class ArticleListComponent implements OnInit {
     public onSelected($event) {
         this.selectedCategory = $event.category;
 
-        this.uiRouter.stateService.go('categories.articles', {
+        this.uiRouter.stateService.go('categories.category.articles', {
             categoryId: $event.category.id,
-            selectedCategory: $event.category,
             page: 1,
+            selectedCategory: $event.category,
             size: this.pageSize,
             sortCriterion: this.sortCriterion,
             sortOrder: this.sortOrder,
@@ -218,7 +214,7 @@ export class ArticleListComponent implements OnInit {
             /*
                 TODO: Why does "exit" fire when we are merely retaining?
              */
-            if (trans.$to().name !== 'categories.articles.article') {
+            if (trans.$to().name !== 'categories.category.articles.article') {
                 this.isArticleState = false;
             }
         });
@@ -234,8 +230,8 @@ export class ArticleListComponent implements OnInit {
     private handleInvalidPage() {
         if (!this.articles.length && this.page > 1) {
             let redirState = this.selectedCategory ?
-                'categories.articles' :
-                'categories.unread';
+                'categories.category.articles' :
+                'categories.category.unread';
 
             if (this.isArticleState && this.articleId !== null) {
                 redirState = redirState + '.article';
@@ -260,7 +256,7 @@ export class ArticleListComponent implements OnInit {
         @private
      */
     private resetCategoryOnExit() {
-        this.uiRouter.transitionService.onExit({ exiting: 'categories.articles' }, (trans) => {
+        this.uiRouter.transitionService.onExit({ exiting: 'categories.category.articles' }, (trans) => {
             if (this && this.selectedCategory) {
                 this.selectedCategory.state.selected = false;
             }
@@ -318,17 +314,5 @@ export class ArticleListComponent implements OnInit {
         for (let i = 0; i < Math.ceil(this.total / this.pageSize); i++) {
             this.pages.push(i + 1);
         }
-    }
-
-    /*
-        Updates user's unread count via a call to the article service.
-
-        @method updateUnreadCount
-        @private
-     */
-    private updateUnreadCount() {
-        this.articleService.getUnreadCount().then((unread) => {
-            this.unreadCount = unread.unreadCount;
-        });
     }
 }

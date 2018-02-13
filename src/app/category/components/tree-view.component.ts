@@ -1,13 +1,18 @@
 declare var $: any; // declare global jquery
 
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation  } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation  } from '@angular/core';
+import { UIRouter } from '@uirouter/angular';
 import { Category } from '../models/category';
+
+import { AppService } from '../../app-service';
+import { ArticleService } from '../../article/services/article-service';
 import { CategoryService } from '../services/category-service';
 
 const treeSelector = '#category-tree';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
+    providers: [AppService, ArticleService],
     selector: 'kb-category-tree-view',
     styleUrls: ['./tree-view.scss'],
     templateUrl: './tree-view.html',
@@ -15,11 +20,29 @@ const treeSelector = '#category-tree';
 export class TreeViewComponent implements OnInit {
     @Input() categories: Category[];
     @Input() selectedCategory: Category;
-    @Output() selected = new EventEmitter();
+    @Input() pageSize: number;
+    @Input() sortCriterion: string;
+    @Input() sortOrder: string;
 
-    constructor(private categoryService: CategoryService) {}
+    public unreadCount: number = 0;
+    public isArticleState: boolean = false;
+
+    constructor(
+        private articleService: ArticleService,
+        private appService: AppService,
+        private categoryService: CategoryService,
+        private uiRouter: UIRouter,
+    ) {}
 
     ngOnInit() {
+        this.handleArticleState();
+        this.updateUnreadCount();
+
+        if (this.selectedCategory) {
+            this.selectedCategory.state.opened = true;
+            this.selectedCategory.state.selected = true;
+        }
+
         /*
             Configures jstree to hide nodes that do not match the filter
             search string. May be source of performance issues on large
@@ -49,8 +72,7 @@ export class TreeViewComponent implements OnInit {
 
     /*
         Handles category tree-node click. Updates jsTree state previously
-        selected cateogry and newly selected category and emite events
-        to parent component.
+        selected category and newly selected category.
 
         @method select
         @param {Category} category CSD Hub Knowledge Base category object
@@ -61,6 +83,54 @@ export class TreeViewComponent implements OnInit {
             this.selectedCategory.state.selected = false;
         }
         category.state.selected = true;
-        this.selected.emit({event, category});
+
+        this.uiRouter.stateService.go('categories.category.articles', {
+            categoryId: category.id,
+            page: 1,
+            selectedCategory: category,
+            size: this.appService.getPageSize(),
+            sortCriterion: this.appService.getSortCriterion(),
+            sortOrder: this.appService.getSortOrder(),
+        }, { location: true });
+    }
+
+    /*
+        Sets properties that handle the display of an article within
+        the context of this parent (by state/route) module.
+
+        @method handleArticleState
+        @private
+     */
+    private handleArticleState() {
+        // Handle direct links to articles
+        if (/\.article$/.test(this.uiRouter.stateService.$current.name)) {
+            this.isArticleState = true;
+        }
+
+        // Handle subsequents state changes between articles list and individual articles
+        this.uiRouter.transitionService.onEnter({ entering: '**.article' }, (trans) => {
+            this.isArticleState = true;
+        });
+
+        this.uiRouter.transitionService.onExit({ exiting: '**.article' }, (trans) => {
+            /*
+                TODO: Why does "exit" fire when we are merely retaining?
+             */
+            if (trans.$to().name !== 'categories.category.articles.article') {
+                this.isArticleState = false;
+            }
+        });
+    }
+
+    /*
+        Updates user's unread count via a call to the article service.
+
+        @method updateUnreadCount
+        @private
+     */
+    private updateUnreadCount() {
+        this.articleService.getUnreadCount().then((unread) => {
+            this.unreadCount = unread.unreadCount;
+        });
     }
 }

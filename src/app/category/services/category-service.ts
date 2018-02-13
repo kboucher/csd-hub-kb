@@ -40,6 +40,11 @@ export class CategoryService {
             .toPromise();
     }
 
+    public deselectCategories(categories): any {
+        this.addStates(categories);
+        return null;
+    }
+
     /*
         Recursively searches categories to find one with a particular ID value.
      */

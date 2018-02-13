@@ -90,6 +90,10 @@ export function resolveSelectedCategoryService(transition, categoryService, cate
     return categoryService.findById(categories, transition.params().categoryId);
 }
 
+export function deselectCategories(categoryService, categories) {
+    return categoryService.deselectCategories(categories);
+}
+
 export function resolveSelectedCategory(selectedCategory) {
     return selectedCategory;
 }
@@ -129,22 +133,14 @@ const categoriesState = {
     ],
     url: '/categories',
     views: {
-        '!$default': { component: CategoryListComponent },
+        '^.categories': { component: CategoryListComponent },
     },
 };
 
-const articlesState = {
-    name: 'categories.articles',
+const categoryState = {
+    name: 'categories.category',
     resolve: [
         {
-            deps: [Transition, ArticleService],
-            resolveFn: resolveArticles,
-            token: 'articlesResponse',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveArticleId,
-            token: 'articleId',
-        }, {
             deps: ['categories'],
             resolveFn: resolveCategories,
             token: 'categories',
@@ -170,27 +166,23 @@ const articlesState = {
             token: 'selectedCategory',
         },
     ],
-    url: '/:categoryId/articles/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
+    url: '/category',
     views: {
-        '!$default': { component: ArticleListComponent },
+        '^.^.categories': { component: TreeViewComponent },
     },
 };
 
-const unreadArticlesState = {
-    name: 'categories.unread',
+const articlesState = {
+    name: 'categories.category.articles',
     resolve: [
         {
             deps: [Transition, ArticleService],
-            resolveFn: resolveUnreadArticles,
+            resolveFn: resolveArticles,
             token: 'articlesResponse',
         }, {
             deps: [Transition],
             resolveFn: resolveArticleId,
             token: 'articleId',
-        }, {
-            deps: ['categories'],
-            resolveFn: resolveCategories,
-            token: 'categories',
         }, {
             deps: [Transition],
             resolveFn: resolvePageNum,
@@ -207,16 +199,59 @@ const unreadArticlesState = {
             deps: [Transition],
             resolveFn: resolveSortOrder,
             token: 'sortOrder',
+        }, {
+            deps: [Transition, CategoryService, 'categories'],
+            resolveFn: resolveSelectedCategoryService,
+            token: 'selectedCategory',
+        },
+    ],
+    url: '/:categoryId/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
+    views: {
+        '^.articles': { component: ArticleListComponent },
+    },
+};
+
+const unreadArticlesState = {
+    name: 'categories.category.unread',
+    resolve: [
+        {
+            deps: [Transition, ArticleService],
+            resolveFn: resolveUnreadArticles,
+            token: 'articlesResponse',
+        }, {
+            deps: [Transition],
+            resolveFn: resolveArticleId,
+            token: 'articleId',
+        }, {
+            deps: [Transition],
+            resolveFn: resolvePageNum,
+            token: 'pageNum',
+        }, {
+            deps: [Transition],
+            resolveFn: resolvePageSize,
+            token: 'pageSize',
+        }, {
+            deps: [Transition],
+            resolveFn: resolveSortCriterion,
+            token: 'sortCriterion',
+        }, {
+            deps: [Transition],
+            resolveFn: resolveSortOrder,
+            token: 'sortOrder',
+        }, {
+            deps: [CategoryService, 'categories'],
+            resolveFn: deselectCategories,
+            token: 'selectedCategory',
         },
     ],
     url: '/unread/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
     views: {
-        '!$default': { component: ArticleListComponent },
+        '^.articles': { component: ArticleListComponent },
     },
 };
 
 const articleState = {
-    name: 'categories.articles.article',
+    name: 'categories.category.articles.article',
     resolve: [
         {
             deps: [Transition, ArticleService],
@@ -242,12 +277,12 @@ const articleState = {
     ],
     url: '/:articleId',
     views: {
-        '^.article': { component: ArticleComponent },
+        '^.^.article': { component: ArticleComponent },
     },
 };
 
 const unreadArticleState = {
-    name: 'categories.unread.article',
+    name: 'categories.category.unread.article',
     resolve: [
         {
             deps: [Transition, ArticleService],
@@ -269,7 +304,7 @@ const unreadArticleState = {
     ],
     url: '/:articleId',
     views: {
-        '^.article': { component: ArticleComponent },
+        '^.^.article': { component: ArticleComponent },
     },
 };
 
@@ -320,6 +355,7 @@ export function initResources(config: AppConfig, translate: TranslationConfigMod
                 articleState,
                 articlesState,
                 categoriesState,
+                categoryState,
                 errorState,
                 unreadArticleState,
                 unreadArticlesState,

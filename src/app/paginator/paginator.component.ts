@@ -38,7 +38,7 @@ export class PaginatorComponent implements OnChanges {
         this.toItem = this.fromItem + (this.pageArticleCount - 1);
 
         // Trim page list down if desired
-        if (this.displayMax < totalPages) {
+        if (this.displayMax < totalPages - 1) {
             this.setDisplayPages();
         } else {
             this.displayPages = this.pages;
@@ -102,6 +102,7 @@ export class PaginatorComponent implements OnChanges {
             start = 1;
             end = this.displayMax;
         }
+
         if (end > this.pages.length) {
             start = this.pages.length - this.displayMax + 1;
             end = this.pages.length;
@@ -113,13 +114,22 @@ export class PaginatorComponent implements OnChanges {
             iterator++;
         }
 
-        // add ellipses for omitted pages
+        /*
+            Add ellipses for omitted pages (unless it would,
+            separate sequential numbers) and ensure first
+            and last page links.
+         */
         if (pages[pages.length - 1] < this.pages.length) {
-            pages.push(-1);
+            if (pages[pages.length - 1] < this.pages.length - 1) {
+                pages.push(-1);
+            }
             pages.push(this.pages.length);
         }
+
         if (pages[0] > 1) {
-            pages.unshift(-1);
+            if (pages[0] > 2) {
+                pages.unshift(-1);
+            }
             pages.unshift(1);
         }
 

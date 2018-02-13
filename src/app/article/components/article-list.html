@@ -1,93 +1,67 @@
-<kb-navigation-bar
-    [unreadCount]="unreadCount"
-    [pageSize]="pageSize"
-    [sortCriterion]="sortCriterion"
-    [sortOrder]="sortOrder">
-</kb-navigation-bar>
-<div class="categories-navigation row">
-    <div class="xs-12 col-sm-3 col-lg-2 category-tree">
-        <kb-category-tree-view
-            [categories]="categories"
-            [selectedCategory]="selectedCategory"
-            (selected)="onSelected($event)">
-        </kb-category-tree-view>
-    </div>
 
-    <div class="category-articles col-xs-12"
-        [class.hidden-xs]="isArticleState"
-        [class.hidden-sm]="isArticleState"
-        [class.col-md-3]="isArticleState"
-        [class.col-xs-12]="!isArticleState"
-        [class.col-sm-9]="!isArticleState"
-        [class.col-lg-10]="!isArticleState">
-            <ui-view name="articles" *ngIf="!isError">
-                <div class="articles-list-container" [class.compact]="isArticleState" *ngIf="articles.length">
-                    <div class="row">
-                        <h3 class="col-sm-12">
-                            <ng-container *ngIf="selectedCategory">{{ selectedCategory.text }}</ng-container>
-                            <ng-container *ngIf="!selectedCategory">Unread Articles</ng-container>
-                        </h3>
-                    </div>
-                    <kb-paginator
-                            [currentPage]="page"
-                            [displayMax]="pagerDisplayMax"
-                            [isCompactView]="isArticleState"
-                            [pages]="pages"
-                            [pageArticleCount]="articles.length"
-                            [pageSize]="pageSize"
-                            [sortCriterion]="sortCriterion"
-                            [sortOptions]="sortOptions"
-                            [sortOrder]="sortOrder"
-                            [totalArticleCount]="total"
-                            (changeSort)="changeSort($event)"
-                            (goToPage)="goToPage($event)">
-                    </kb-paginator>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="list-group articles-list">
-                                <a *ngFor="let article of articles"
-                                    class="list-group-item"
-                                    uiSref=".article"
-                                    [class.unread-article]="!article.read"
-                                    [uiParams]="{ articleId: article.id }"
-                                    [uiOptions]="{ location: true }">
-                                        {{ article.title }}
-                                        <span class="text-muted small" *ngIf="!isArticleState">
-                                            {{ article.date | date:"MMM d, y" }}
-                                        </span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <kb-paginator
-                            *ngIf="pageSize > 10 && pages.length > 1"
-                            [currentPage]="page"
-                            [displayMax]="pagerDisplayMax"
-                            [isCompactView]="isArticleState"
-                            [pageArticleCount]="articles.length"
-                            [pages]="pages"
-                            [pageSize]="pageSize"
-                            [totalArticleCount]="total"
-                            (changeSort)="changeSort($event)"
-                            (goToPage)="goToPage($event)">
-                    </kb-paginator>
+<ui-view name="articles" *ngIf="!isError">
+    <div class="articles-list-container" [class.compact]="isArticleState" *ngIf="articles.length">
+        <div class="row">
+            <h3 class="col-sm-12">
+                <ng-container *ngIf="selectedCategory">{{ selectedCategory.text }}</ng-container>
+                <ng-container *ngIf="!selectedCategory">{{ 'STRINGS.app.unreadArticles' | translate }}</ng-container>
+            </h3>
+        </div>
+        <kb-paginator
+                [currentPage]="page"
+                [displayMax]="pagerDisplayMax"
+                [isCompactView]="isArticleState"
+                [pages]="pages"
+                [pageArticleCount]="articles.length"
+                [pageSize]="pageSize"
+                [sortCriterion]="sortCriterion"
+                [sortOptions]="sortOptions"
+                [sortOrder]="sortOrder"
+                [totalArticleCount]="total"
+                (changeSort)="changeSort($event)"
+                (goToPage)="goToPage($event)">
+        </kb-paginator>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="list-group articles-list">
+                    <a *ngFor="let article of articles"
+                        class="list-group-item"
+                        uiSref=".article"
+                        [class.unread-article]="!article.read"
+                        [uiParams]="{ articleId: article.id }"
+                        [uiOptions]="{ location: true }">
+                            {{ article.title }}
+                            <span class="text-muted small" *ngIf="!isArticleState">
+                                {{ article.date | date:"MMM d, y" }}
+                            </span>
+                    </a>
                 </div>
+            </div>
+        </div>
+        <kb-paginator
+                *ngIf="pageSize > 10 && pages.length > 1"
+                [currentPage]="page"
+                [displayMax]="pagerDisplayMax"
+                [isCompactView]="isArticleState"
+                [pageArticleCount]="articles.length"
+                [pages]="pages"
+                [pageSize]="pageSize"
+                [totalArticleCount]="total"
+                (changeSort)="changeSort($event)"
+                (goToPage)="goToPage($event)">
+        </kb-paginator>
+    </div>
 
-                <kb-system-notification
-                    icon="icon-folder-open-alt"
-                    notificationClass="no-articles"
-                    [message]="emptyMssg"
-                    *ngIf="!articles.length">
-                </kb-system-notification>
-            </ui-view>
-            <kb-system-notification
-                *ngIf="isError"
-                icon="icon-warning-sign"
-                notificationClass="article-error"
-                [message]="errorMessage">
-            </kb-system-notification>
-    </div>
-    <div class="article-container col-xs-12 col-sm-9 col-lg-7" *ngIf="isArticleState">
-        <ui-view name="article"></ui-view>
-    </div>
-</div>
+    <kb-system-notification
+        icon="icon-folder-open-alt"
+        notificationClass="no-articles"
+        [message]="emptyMssg"
+        *ngIf="!articles.length">
+    </kb-system-notification>
+</ui-view>
+<kb-system-notification
+    *ngIf="isError"
+    icon="icon-warning-sign"
+    notificationClass="article-error"
+    [message]="errorMessage">
+</kb-system-notification>
