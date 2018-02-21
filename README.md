@@ -2,12 +2,22 @@
 
 This portlet was generated using Xtivia's Jetray portlet generator and written in Angular 4. It has additional dependencies on Liferay's AUI framework and jQuery.
 
-## Build & Deploy
+## Build & Deploy (from project root)
 
-From project root:
+This app has dependencies on NodeJs/NPM and requires `gulp` to be installed globally.
+
+`npm install -g gulp`
+
+### Development build
 
 1. `npm install`
 2. `gulp build`
+3. `gulp deploy`
+
+### Production build
+
+1. `npm install`
+2. `gulp prod`
 3. `gulp deploy`
 
 ## Liferay Configurations
@@ -51,33 +61,7 @@ https://www.jstree.com/
 
 ## Web Service Dependencies
 
-### Get the Category Tree
-
-`http://{hostname}:{port}/o/kb-rest-api/category/{groupId}/tree/v1/`
-
-### Get Article and Unread Count
-
-`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/content/{articleId}/v1`
-
-### Get Unread Count
-
-`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadcount/v1`
-
-### Get Unread Article List
-
-#### With Pagination
-`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/page/{page}/size/{size}/sort/{column}/{asc}/v1`
-
-#### Without Pagination
-`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/unreadarticle/sort/{column}/{asc}/v1`
-
-### Get Article List for a Category
-
-#### With Pagination
-`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/page/{page}/size/{size}/sort/{column}/{asc}/v1`
-
-#### Without Pagination
-`http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/sort/{column}/{asc}/v1`
+The CSD Hub Knowledge Base portlet requires the csd-hub-lws web-service project for data access.
 
 ## Development Notes
 
