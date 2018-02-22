@@ -5,6 +5,9 @@ import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { UIRouter } from '@uirouter/angular';
 
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+
 // Import RxJs required methods
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -13,10 +16,12 @@ import 'rxjs/add/operator/toPromise';
 import { AppConfig } from '../../../config/app.config';
 import { AppService } from '../../app-service';
 import { Category } from '../../category/models/category';
+import { CategoryService } from '../../category/services/category-service';
 import { Article } from '../models/article';
 
 @Injectable()
 export class ArticleService {
+    public currentCategory: BehaviorSubject<Category>;
     private apiVersion: string;
     private groupId: string;
     private portalUrl: string;
@@ -24,12 +29,23 @@ export class ArticleService {
     constructor(
         private appConfig: AppConfig,
         private appService: AppService,
+        private categoryService: CategoryService,
         private http: Http,
         private uiRouter: UIRouter,
     ) {
         this.apiVersion = appConfig.getEntryByKey('API_VERSION');
         this.groupId = Liferay.ThemeDisplay.getScopeGroupId();
         this.portalUrl = Liferay.ThemeDisplay.getPortalURL();
+
+        this.currentCategory = new BehaviorSubject(null);
+    }
+
+    public getCurrentCategory(): Observable<Category> {
+        return this.currentCategory.asObservable();
+    }
+
+    public setCurrentCategory(category: Category) {
+        this.currentCategory.next(category);
     }
 
     public getArticlesByCategory(category: string, pager: any): Promise<Response> {
@@ -41,6 +57,9 @@ export class ArticleService {
         let articleListUrl;
 
         this.savePagingPreferences(pager);
+        this.setCurrentCategory(
+            this.categoryService.findById(this.categoryService.categories, category)
+        );
 
         /* tslint:disable max-line-length */
         if (pager.size) {
@@ -101,6 +120,7 @@ export class ArticleService {
         let articleListUrl;
 
         this.savePagingPreferences(pager);
+        this.setCurrentCategory(null);
 
         /* tslint:disable max-line-length */
         if (pager) {

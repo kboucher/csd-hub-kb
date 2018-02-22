@@ -5,7 +5,6 @@ import { Category } from '../../category/models/category';
 import { Article } from '../models/article';
 
 @Component({
-    providers: [TranslateService],
     selector: 'kb-article',
     styleUrls: ['./article.scss'],
     templateUrl: './article.html',

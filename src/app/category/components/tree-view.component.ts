@@ -12,20 +12,20 @@ const treeSelector = '#category-tree';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    providers: [AppService, ArticleService],
     selector: 'kb-category-tree-view',
     styleUrls: ['./tree-view.scss'],
     templateUrl: './tree-view.html',
 })
 export class TreeViewComponent implements OnInit {
     @Input() categories: Category[];
-    @Input() selectedCategory: Category;
+    @Input() selectedCategory?: Category;
     @Input() pageSize: number;
     @Input() sortCriterion: string;
     @Input() sortOrder: string;
 
     public unreadCount: number = 0;
     public isArticleState: boolean = false;
+    private $treeView: any;
 
     constructor(
         private articleService: ArticleService,
@@ -43,6 +43,12 @@ export class TreeViewComponent implements OnInit {
             this.selectedCategory.state.selected = true;
         }
 
+        this.articleService.getCurrentCategory().subscribe((value) => {
+            if (this.selectedCategory !== value) {
+                this.updateSelectedCategory(value);
+            }
+        });
+
         /*
             Configures jstree to hide nodes that do not match the filter
             search string. May be source of performance issues on large
@@ -50,7 +56,7 @@ export class TreeViewComponent implements OnInit {
         */
         $.jstree.defaults.search.show_only_matches = true;
 
-        $(treeSelector).on('select_node.jstree', function(e, data) {
+        this.$treeView = $(treeSelector).on('select_node.jstree', function(e, data) {
             const category = this.categoryService.findById(this.categories, data.node.id);
 
             this.select(category);
@@ -66,8 +72,31 @@ export class TreeViewComponent implements OnInit {
             on form submit instead of keyup event.
         */
         $('#category-tree-filter-input').keyup((e) => {
-            $(treeSelector).jstree(true).search($('#category-tree-filter-input').val());
+            this.$treeView.jstree(true)
+                .search($('#category-tree-filter-input').val());
         });
+    }
+
+    /*
+        Handles external category changes triggered
+        by subscription to observable on Article
+        Service (Ex: from Article view, Carousel link
+        or bookmarked URL.)
+     */
+    public updateSelectedCategory(category: Category) {
+        if (this.selectedCategory) {
+            this.selectedCategory.state.selected = false;
+        }
+
+        this.selectedCategory = category;
+        this.$treeView.jstree('deselect_all', true);
+
+        if (category) {
+            category.state.opened = true;
+            category.state.selected = true;
+
+            this.$treeView.jstree('select_node', category, true);
+        }
     }
 
     /*

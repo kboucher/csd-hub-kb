@@ -13,6 +13,7 @@ import { Category } from '../models/category';
 
 @Injectable()
 export class CategoryService {
+    public categories: Category[];
     private apiVersion: string;
     private categoriesUrl: string;
 
@@ -32,7 +33,9 @@ export class CategoryService {
 
         return this.http.get(this.categoriesUrl)
             .map((res) => {
-                return this.addStates(res.json());
+                const categories = this.addStates(res.json());
+                this.categories = categories;
+                return categories;
             })
             .catch((err) => {
                 return [{error: err}];
