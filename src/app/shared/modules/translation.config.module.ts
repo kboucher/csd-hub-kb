@@ -10,16 +10,15 @@ export function HttpLoaderFactory(http: Http) {
 
 const translationOptions = {
     loader: {
+        deps: [Http],
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [Http],
     },
 };
 
 @NgModule({
-    imports: [TranslateModule.forRoot(translationOptions)],
     exports: [TranslateModule],
-    providers: [TranslateService],
+    imports: [TranslateModule.forRoot(translationOptions)],
 })
 export class TranslationConfigModule {
     browserLang;

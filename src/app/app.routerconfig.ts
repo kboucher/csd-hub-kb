@@ -4,6 +4,7 @@ import { Injectable, Injector } from '@angular/core';
 import { StateDeclaration, UIRouter } from '@uirouter/angular';
 
 export function uiRouterConfigFn(uiRouter: UIRouter, injector: Injector) {
+    uiRouter.urlRouter.deferIntercept();
 
     // If no URL matches, and we don't already have a current state,
     // then go to the `tasks` state by default. This function is

@@ -8,7 +8,6 @@ import { ArticleService } from '../../article/services/article-service';
 import { Category } from '../models/category';
 
 @Component({
-    providers: [AppService, ArticleService, TranslateService],
     selector: 'kb-category-list',
     styleUrls: ['./category-list.scss'],
     templateUrl: './category-list.html',

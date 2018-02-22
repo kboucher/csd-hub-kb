@@ -4,12 +4,12 @@ import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { Transition, UIRouter, UIRouterModule } from '@uirouter/angular';
 import { uiRouterConfigFn } from './app.routerconfig';
+import { CoreModule } from './core.module';
 
 // Components
 import { AppConfig } from '../config/app.config';
 import { TranslationConfigModule } from './shared/modules/translation.config.module';
 
-import { AppService } from './app-service';
 import { AppComponent } from './app.component';
 import { ArticleListComponent } from './article/components/article-list.component';
 import { ArticleComponent } from './article/components/article.component';
@@ -344,12 +344,12 @@ export function initResources(config: AppConfig, translate: TranslationConfigMod
     ],
     imports: [
         BrowserModule,
+        CoreModule,
         FormsModule,
         HttpModule,
         TranslationConfigModule,
         UIRouterModule.forRoot({
             config: uiRouterConfigFn,
-            deferIntercept: true, // Allows APP_INITIALIZER to complete before routing
             states: [
                 anonymousUserState,
                 articleState,
@@ -370,9 +370,6 @@ export function initResources(config: AppConfig, translate: TranslationConfigMod
             provide: APP_INITIALIZER,
             useFactory: initResources,
         },
-        AppService,
-        ArticleService,
-        CategoryService,
     ],
 })
 

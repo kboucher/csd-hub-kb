@@ -14,7 +14,6 @@ import { Category } from '../../category/models/category';
 import { Article } from '../models/article';
 
 @Component({
-    providers: [TranslateService],
     selector: 'kb-article-list',
     styleUrls: ['./article-list.scss'],
     templateUrl: './article-list.html',
