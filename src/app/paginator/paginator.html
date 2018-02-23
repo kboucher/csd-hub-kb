@@ -47,11 +47,16 @@
                         data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false">
-                            {{ pageSize }} <span class="caret"></span>
+                            <ng-container *ngIf="pageSize > 0">{{ pageSize }}</ng-container>
+                            <ng-container *ngIf="pageSize < 0">All</ng-container>
+                            <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li *ngFor="let option of pageSizeOptions">
-                            <a href="#" [class.selected]="option === pageSize" (click)="changePageSize(option)">{{ option }}</a>
+                            <a href="#" [class.selected]="option === pageSize" (click)="changePageSize(option)">
+                                <ng-container *ngIf="option > 0">{{ option }}</ng-container>
+                                <ng-container *ngIf="option < 0">All</ng-container>
+                            </a>
                         </li>
                         <!--
                             TODO: Uncomment this after wiring up "all records" state

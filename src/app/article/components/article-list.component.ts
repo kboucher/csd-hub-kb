@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UIRouter } from '@uirouter/angular';
 
 import { AppConfig } from '../../../config/app.config';
+import { AppService } from '../../app-service';
 import { Category } from '../../category/models/category';
 import { Article } from '../models/article';
 
@@ -21,11 +22,7 @@ import { Article } from '../models/article';
 export class ArticleListComponent implements OnInit {
     @Input() articleId: string = null;
     @Input() articlesResponse: any;
-    @Input() categories: Category[];
-    @Input() pageSize: number;
     @Input() selectedCategory?: Category;
-    @Input() sortCriterion: string;
-    @Input() sortOrder: string;
 
     public articles: Article[];
     public emptyMssg: string;
@@ -36,12 +33,16 @@ export class ArticleListComponent implements OnInit {
     public page: number;
     public pagerDisplayMax: number;
     public pages: number[] = [];
+    public pageSize: number;
     public selectedArticleId: string = null;
+    public sortCriterion: string;
     public sortOptions: any[];
+    public sortOrder: string;
     public total: number;
 
     constructor(
         private appConfig: AppConfig,
+        private appService: AppService,
         private translate: TranslateService,
         private uiRouter: UIRouter,
     ) {
@@ -58,6 +59,18 @@ export class ArticleListComponent implements OnInit {
             this.handleInvalidPage();
             this.setupCategory();
         }
+
+        this.appService.getPageSize().subscribe((value) => {
+            this.pageSize = value;
+        });
+
+        this.appService.getSortCriterion().subscribe((value) => {
+            this.sortCriterion = value;
+        });
+
+        this.appService.getSortOrder().subscribe((value) => {
+            this.sortOrder = value;
+        });
     }
 
     /*
