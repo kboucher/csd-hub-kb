@@ -131,7 +131,7 @@ const categoriesState = {
             token: 'categories',
         },
     ],
-    url: '/categories',
+    url: '',
     views: {
         '^.categories': { component: CategoryListComponent },
     },
@@ -144,22 +144,6 @@ const categoryState = {
             deps: ['categories'],
             resolveFn: resolveCategories,
             token: 'categories',
-        }, {
-            deps: [Transition],
-            resolveFn: resolvePageNum,
-            token: 'pageNum',
-        }, {
-            deps: [Transition],
-            resolveFn: resolvePageSize,
-            token: 'pageSize',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortCriterion,
-            token: 'sortCriterion',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortOrder,
-            token: 'sortOrder',
         }, {
             deps: [Transition, CategoryService, 'categories'],
             resolveFn: resolveSelectedCategoryService,
@@ -174,6 +158,11 @@ const categoryState = {
 
 const articlesState = {
     name: 'categories.category.articles',
+    params: {
+        size: null,
+        sortCriterion: null,
+        sortOrder: null,
+    },
     resolve: [
         {
             deps: [Transition, ArticleService],
@@ -188,24 +177,12 @@ const articlesState = {
             resolveFn: resolvePageNum,
             token: 'pageNum',
         }, {
-            deps: [Transition],
-            resolveFn: resolvePageSize,
-            token: 'pageSize',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortCriterion,
-            token: 'sortCriterion',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortOrder,
-            token: 'sortOrder',
-        }, {
             deps: [Transition, CategoryService, 'categories'],
             resolveFn: resolveSelectedCategoryService,
             token: 'selectedCategory',
         },
     ],
-    url: '/:categoryId/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
+    url: '/:categoryId/page/:page',
     views: {
         '^.articles': { component: ArticleListComponent },
     },
@@ -213,6 +190,11 @@ const articlesState = {
 
 const unreadArticlesState = {
     name: 'categories.category.unread',
+    params: {
+        size: null,
+        sortCriterion: null,
+        sortOrder: null,
+    },
     resolve: [
         {
             deps: [Transition, ArticleService],
@@ -227,24 +209,12 @@ const unreadArticlesState = {
             resolveFn: resolvePageNum,
             token: 'pageNum',
         }, {
-            deps: [Transition],
-            resolveFn: resolvePageSize,
-            token: 'pageSize',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortCriterion,
-            token: 'sortCriterion',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortOrder,
-            token: 'sortOrder',
-        }, {
             deps: [CategoryService, 'categories'],
             resolveFn: deselectCategories,
             token: 'selectedCategory',
         },
     ],
-    url: '/unread/page/:page/size/:size/sort/:sortCriterion/:sortOrder',
+    url: '/unread/page/:page',
     views: {
         '^.articles': { component: ArticleListComponent },
     },
@@ -263,19 +233,11 @@ const articleState = {
             token: 'category',
         }, {
             deps: [Transition],
-            resolveFn: resolvePageSize,
-            token: 'pageSize',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortCriterion,
-            token: 'sortCriterion',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortOrder,
-            token: 'sortOrder',
+            resolveFn: resolvePageNum,
+            token: 'pageNum',
         },
     ],
-    url: '/:articleId',
+    url: '/article/:articleId',
     views: {
         '^.^.article': { component: ArticleComponent },
     },
@@ -288,18 +250,6 @@ const unreadArticleState = {
             deps: [Transition, ArticleService],
             resolveFn: resolveArticle,
             token: 'article',
-        }, {
-            deps: [Transition],
-            resolveFn: resolvePageSize,
-            token: 'pageSize',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortCriterion,
-            token: 'sortCriterion',
-        }, {
-            deps: [Transition],
-            resolveFn: resolveSortOrder,
-            token: 'sortOrder',
         },
     ],
     url: '/:articleId',

@@ -25,9 +25,9 @@ export class AppService {
         this.defaultSortCriterion = appConfig.getEntryByKey('DEFAULT_SORT_CRITERION');
         this.defaultSortOrder = appConfig.getEntryByKey('DEFAULT_SORT_ORDER');
 
-        this.pageSize = new BehaviorSubject(null);
-        this.sortCriterion = new BehaviorSubject(null);
-        this.sortOrder = new BehaviorSubject(null);
+        this.pageSize = new BehaviorSubject(+this.getFromLocalStorage(pageSizeKey, this.defaultPageSize.toString()));
+        this.sortCriterion = new BehaviorSubject(this.getFromLocalStorage(sortCriterionKey, this.defaultSortCriterion));
+        this.sortOrder = new BehaviorSubject(this.getFromLocalStorage(sortOrderKey, this.defaultSortOrder));
     }
 
     public getPageSize(): Observable<number> {

@@ -1,7 +1,7 @@
 declare var Liferay: any;
 declare var KBUnread: any; // global unread link functions
 
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { UIRouter } from '@uirouter/angular';
 
@@ -20,7 +20,7 @@ import { CategoryService } from '../../category/services/category-service';
 import { Article } from '../models/article';
 
 @Injectable()
-export class ArticleService implements OnInit {
+export class ArticleService {
     public currentCategory: BehaviorSubject<Category>;
     private apiVersion: string;
     private groupId: string;
@@ -41,9 +41,7 @@ export class ArticleService implements OnInit {
         this.portalUrl = Liferay.ThemeDisplay.getPortalURL();
 
         this.currentCategory = new BehaviorSubject(null);
-    }
 
-    ngOnInit() {
         this.appService.getPageSize().subscribe((value) => {
             this.pageSize = value;
         });
@@ -65,7 +63,7 @@ export class ArticleService implements OnInit {
         this.currentCategory.next(category);
     }
 
-    public getArticlesByCategory(category: string, pager: any): Promise<Response> {
+    public getArticlesByCategory(category: string, pager?: any): Promise<Response> {
         /* tslint:disable max-line-length */
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/sort/{sortCriterion}/{sortOrder}/v1
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/category/{categoryId}/page/{page}/size/{size}/sort/{sortCriterion}/{sortOrder}/v1
@@ -77,10 +75,10 @@ export class ArticleService implements OnInit {
         this.setCurrentCategory(this.categoryService.findById(this.categoryService.categories, category));
 
         /* tslint:disable max-line-length */
-        if (pager.size) {
-            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/page/${pager.page}/size/${pager.size}/sort/${pager.sortCriterion}/${pager.sortOrder}/${this.apiVersion}`;
+        if (pager.size > 0) {
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/page/${pager.page}/size/${this.pageSize}/sort/${this.sortCriterion}/${this.sortOrder}/${this.apiVersion}`;
         } else {
-            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/sort/${pager.sortCriterion}/${pager.sortOrder}/${this.apiVersion}`;
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/category/${category}/sort/${this.sortCriterion}/${this.sortOrder}/${this.apiVersion}`;
         }
         /* tslint:enable max-line-length */
 
@@ -138,8 +136,8 @@ export class ArticleService implements OnInit {
         this.setCurrentCategory(null);
 
         /* tslint:disable max-line-length */
-        if (pager) {
-            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/page/${pager.page}/size/${pager.size}/sort/${pager.sortCriterion}/${pager.sortOrder}/${this.apiVersion}`;
+        if (pager.size > 0) {
+            articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/page/${pager.page}/size/${this.pageSize}/sort/${this.sortCriterion}/${this.sortOrder}/${this.apiVersion}`;
         } else {
             articleListUrl = `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/unreadarticle/sort/${pager.sortCriterion}/${pager.sortOrder}/${this.apiVersion}`;
         }

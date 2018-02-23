@@ -13,9 +13,6 @@ export class ArticleComponent implements OnInit {
     @Input() article?: Article;
     @Input() category?: Category;
     @Input() pageNum?: number;
-    @Input() pageSize?: number;
-    @Input() sortCriterion?: string;
-    @Input() sortOrder?: string;
 
     public isError: boolean = false;
     public errorMessage: string = null;

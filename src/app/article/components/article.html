@@ -1,7 +1,7 @@
 <div class="article" *ngIf="article">
     <a class="btn btn-default back-btn"
         uiSref="categories.category.articles"
-        [uiParams]="{ categoryId: category.id, page: pageNum, size: pageSize }"
+        [uiParams]="{ categoryId: category.id, page: pageNum }"
         [uiOptions]="{ location: true }"
         *ngIf="category">
             <i class="icon icon-remove"></i>
@@ -29,10 +29,7 @@
                     <a uiSref="categories.category.articles"
                         [uiParams]="{
                             categoryId: category.categoryId,
-                            page: 1,
-                            size: pageSize,
-                            sortCriterion: sortCriterion,
-                            sortOrder: sortOrder
+                            page: 1
                         }"
                         [uiOptions]="{ location: true }">
                             {{ category.categoryName }}
