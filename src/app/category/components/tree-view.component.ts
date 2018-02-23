@@ -49,6 +49,18 @@ export class TreeViewComponent implements OnInit {
             }
         });
 
+        this.appService.getPageSize().subscribe((value) => {
+            this.pageSize = value;
+        });
+
+        this.appService.getSortCriterion().subscribe((value) => {
+            this.sortCriterion = value;
+        });
+
+        this.appService.getSortOrder().subscribe((value) => {
+            this.sortOrder = value;
+        });
+
         /*
             Configures jstree to hide nodes that do not match the filter
             search string. May be source of performance issues on large
@@ -117,9 +129,9 @@ export class TreeViewComponent implements OnInit {
             categoryId: category.id,
             page: 1,
             selectedCategory: category,
-            size: this.appService.getPageSize(),
-            sortCriterion: this.appService.getSortCriterion(),
-            sortOrder: this.appService.getSortOrder(),
+            size: this.pageSize,
+            sortCriterion: this.sortCriterion,
+            sortOrder: this.sortOrder,
         }, { location: true });
     }
 

@@ -49,9 +49,15 @@ export class CategoryListComponent implements OnInit {
         }
         /* tslint:enable */
 
-        this.pageSize = this.appService.getPageSize();
-        this.sortCriterion = this.appService.getSortCriterion();
-        this.sortOrder = this.appService.getSortOrder();
+        this.appService.getPageSize().subscribe((value) => {
+            this.pageSize = value;
+        });
+        this.appService.getSortCriterion().subscribe((value) => {
+            this.sortCriterion = value;
+        });
+        this.appService.getSortOrder().subscribe((value) => {
+            this.sortOrder = value;
+        });
 
         this.articleService.getUnreadCount().then((unread) => {
             this.unreadCount = unread.unreadCount;
