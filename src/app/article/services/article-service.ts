@@ -1,7 +1,7 @@
 declare var Liferay: any;
 declare var KBUnread: any; // global unread link functions
 
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { UIRouter } from '@uirouter/angular';
 
@@ -20,11 +20,14 @@ import { CategoryService } from '../../category/services/category-service';
 import { Article } from '../models/article';
 
 @Injectable()
-export class ArticleService {
+export class ArticleService implements OnInit {
     public currentCategory: BehaviorSubject<Category>;
     private apiVersion: string;
     private groupId: string;
+    private pageSize: number;
     private portalUrl: string;
+    private sortCriterion: string;
+    private sortOrder: string;
 
     constructor(
         private appConfig: AppConfig,
@@ -38,6 +41,20 @@ export class ArticleService {
         this.portalUrl = Liferay.ThemeDisplay.getPortalURL();
 
         this.currentCategory = new BehaviorSubject(null);
+    }
+
+    ngOnInit() {
+        this.appService.getPageSize().subscribe((value) => {
+            this.pageSize = value;
+        });
+
+        this.appService.getSortCriterion().subscribe((value) => {
+            this.sortCriterion = value;
+        });
+
+        this.appService.getSortOrder().subscribe((value) => {
+            this.sortOrder = value;
+        });
     }
 
     public getCurrentCategory(): Observable<Category> {
@@ -57,9 +74,7 @@ export class ArticleService {
         let articleListUrl;
 
         this.savePagingPreferences(pager);
-        this.setCurrentCategory(
-            this.categoryService.findById(this.categoryService.categories, category)
-        );
+        this.setCurrentCategory(this.categoryService.findById(this.categoryService.categories, category));
 
         /* tslint:disable max-line-length */
         if (pager.size) {
@@ -156,9 +171,9 @@ export class ArticleService {
     }
 
     private savePagingPreferences(pager: any): void {
-        const pageSize = this.appService.getPageSize();
-        const sortCriterion = this.appService.getSortCriterion();
-        const sortOrder = this.appService.getSortOrder();
+        const pageSize = this.pageSize;
+        const sortCriterion = this.sortCriterion;
+        const sortOrder = this.sortOrder;
 
         if (pager.size && +pager.size !== pageSize) {
             this.appService.savePageSize(pager.size);
