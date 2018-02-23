@@ -19,12 +19,13 @@ const treeSelector = '#category-tree';
 export class TreeViewComponent implements OnInit {
     @Input() categories: Category[];
     @Input() selectedCategory?: Category;
-    @Input() pageSize: number;
-    @Input() sortCriterion: string;
-    @Input() sortOrder: string;
 
-    public unreadCount: number = 0;
     public isArticleState: boolean = false;
+    public pageSize: number;
+    public sortCriterion: string;
+    public sortOrder: string;
+    public unreadCount: number = 0;
+
     private $treeView: any;
 
     constructor(
@@ -101,7 +102,10 @@ export class TreeViewComponent implements OnInit {
         }
 
         this.selectedCategory = category;
-        this.$treeView.jstree('deselect_all', true);
+
+        if (this.$treeView && this.$treeView.jstree) {
+            this.$treeView.jstree('deselect_all', true);
+        }
 
         if (category) {
             category.state.opened = true;

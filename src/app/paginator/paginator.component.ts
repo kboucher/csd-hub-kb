@@ -23,7 +23,7 @@ export class PaginatorComponent implements OnChanges {
     displayPages: number[];
     fromItem: number;
     nextPage: number;
-    pageSizeOptions: number[] = [10, 25, 50, 100];
+    pageSizeOptions: number[] = [10, 25, 50, 100, -1];
     prevPage: number;
     toItem: number;
 
