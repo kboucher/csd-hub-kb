@@ -9,6 +9,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { AppConfig } from '../../../config/app.config';
+import { SessionService } from '../../session-service';
 import { Category } from '../models/category';
 
 @Injectable()
@@ -20,6 +21,7 @@ export class CategoryService {
     constructor(
         private appConfig: AppConfig,
         private http: Http,
+        private sessionService: SessionService,
         private uiRouter: UIRouter) {
             const portalUrl = Liferay.ThemeDisplay.getPortalURL();
             const groupId = Liferay.ThemeDisplay.getScopeGroupId();
@@ -30,6 +32,7 @@ export class CategoryService {
 
     public getCategories(): Promise<any> {
         this.handleAnonymous();
+        this.sessionService.extendSession();
 
         return this.http.get(this.categoriesUrl)
             .map((res) => {
