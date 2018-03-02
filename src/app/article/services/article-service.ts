@@ -17,6 +17,7 @@ import { AppConfig } from '../../../config/app.config';
 import { AppService } from '../../app-service';
 import { Category } from '../../category/models/category';
 import { CategoryService } from '../../category/services/category-service';
+import { SessionService } from '../../session-service';
 import { Article } from '../models/article';
 
 @Injectable()
@@ -34,6 +35,7 @@ export class ArticleService {
         private appService: AppService,
         private categoryService: CategoryService,
         private http: Http,
+        private sessionService: SessionService,
         private uiRouter: UIRouter,
     ) {
         this.apiVersion = appConfig.getEntryByKey('API_VERSION');
@@ -73,6 +75,7 @@ export class ArticleService {
 
         this.savePagingPreferences(pager);
         this.setCurrentCategory(this.categoryService.findById(this.categoryService.categories, category));
+        this.sessionService.extendSession();
 
         /* tslint:disable max-line-length */
         if (pager.size > 0) {
@@ -94,6 +97,7 @@ export class ArticleService {
 
     public getArticleById(articleId: number): Promise<any> {
         // http://{hostname}:{port}/o/kb-rest-api/article/{groupId}/content/{articleId}/v1
+        this.sessionService.extendSession();
 
         const articleUrl =
             `${this.portalUrl}/o/kb-rest-api/article/${this.groupId}/content/${articleId}/${this.apiVersion}`;
@@ -134,6 +138,7 @@ export class ArticleService {
 
         this.savePagingPreferences(pager);
         this.setCurrentCategory(null);
+        this.sessionService.extendSession();
 
         /* tslint:disable max-line-length */
         if (pager.size > 0) {
